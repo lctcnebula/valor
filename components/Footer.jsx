@@ -9,7 +9,7 @@ export default function Footer() {
     <footer className="footer">
       <div className="container footer-top">
         <div className="footer-brand">
-          <Logo className="logo-lg" />
+          <Logo id="vl-foot" className="logo-lg" />
           <p>Chauffeured black car service across {SITE.areaLong}.</p>
         </div>
         <nav className="footer-links" aria-label="Services">

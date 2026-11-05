@@ -13,6 +13,13 @@ const TRIP_LINES = ["Pickup", "Drop-off", "Date and time", "Vehicle", "Passenger
 export default function Home() {
   return (
     <>
+      <section className="showpiece" aria-label={SITE.name}>
+        <div className="container showpiece-inner">
+          <Logo id="vl-hero" className="showpiece-logo" />
+          <p className="showpiece-tag">Chicagoland and the suburbs</p>
+        </div>
+      </section>
+
       <section className="stripe hero">
         <div className="container hero-grid">
           <div className="hero-copy">
@@ -48,7 +55,7 @@ export default function Home() {
           </div>
           <article className="sheet" aria-label="Sample quote">
             <header className="sheet-head">
-              <Logo variant="inline" className="sheet-logo" />
+              <Logo layout="horizontal" id="vl-sheet" animated={false} className="sheet-logo" />
               <span>Quote, sample</span>
             </header>
             <p className="sheet-for">Prepared for <strong>You</strong></p>
@@ -123,7 +130,7 @@ export default function Home() {
       <section className="stripe close" aria-labelledby="close-head">
         <div className="container close-grid">
           <div>
-            <Logo variant="car" className="close-car" title="" />
+            <Logo layout="car" id="vl-close" className="close-car" title="" />
             <h2 id="close-head">Send the trip. We send the total.</h2>
           </div>
           <div className="close-side">

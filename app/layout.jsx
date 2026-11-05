@@ -13,7 +13,7 @@ export const metadata = {
   openGraph: { title: "Valor Limo", description: SITE.description, type: "website" },
 };
 
-export const viewport = { themeColor: "#f8f6f2" };
+export const viewport = { themeColor: "#0B0C0E" };
 
 export default function RootLayout({ children }) {
   return (
@@ -21,7 +21,7 @@ export default function RootLayout({ children }) {
       <head>
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="" />
-        <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+        <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Manrope:wght@400;500;600&display=swap" rel="stylesheet" />
       </head>
       <body>
         <a href="#main" className="skip-link">Skip to content</a>

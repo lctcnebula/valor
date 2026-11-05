@@ -1,25 +1,25 @@
 :root {
-  color-scheme: light;
+  color-scheme: dark;
   --space-3xs: 2px; --space-2xs: 4px; --space-xs: 8px; --space-sm: 12px; --space-md: 16px; --space-lg: 24px; --space-xl: 40px; --space-2xl: 64px; --space-3xl: 96px; --space-4xl: 144px;
   --text-xs: 0.8125rem; --text-sm: 0.875rem; --text-md: 1rem; --text-lg: 1.25rem; --text-xl: 1.5625rem; --text-2xl: 1.953rem; --text-3xl: 2.441rem;
   --text-display-s: clamp(2.25rem, 4vw + 0.5rem, 3.75rem); --text-display: clamp(2.75rem, 5vw + 1rem, 5.25rem);
   --text-section: clamp(2rem, 2.5vw + 1rem, 3.5rem); --text-title: clamp(1.25rem, 0.75vw + 0.875rem, 1.625rem); --text-lead: clamp(1.125rem, 0.35vw + 1rem, 1.375rem);
   --ease-out: cubic-bezier(0.16, 1, 0.3, 1); --ease-in: cubic-bezier(0.7, 0, 0.84, 0); --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
   --dur-micro: 120ms; --dur-short: 220ms; --dur-long: 420ms;
-  --color-error: oklch(50% 0.2 27); --color-success: oklch(48% 0.12 150);
+  --color-error: #FF8A80; --color-success: #8FD6A8;
   --container: 1440px; --gutter: 64px; --gap-columns: 32px; --section-gap-s: 120px; --section-gap: 144px; --section-gap-l: 176px;
   --z-base: 1; --z-raised: 10; --z-dropdown: 100; --z-sticky: 200; --z-sticky-nav: 300; --z-modal: 400; --z-toast: 500; --z-tooltip: 600;
-  /* Quiet and warm: paper, stone, near-black ink. One colour does everything. */
-  --color-paper: oklch(98.6% 0.005 85); --color-paper-2: oklch(95.6% 0.008 80); --color-paper-3: oklch(99.6% 0.003 85);
-  --color-stripe: oklch(95.2% 0.009 80); --color-stripe-deep: oklch(84% 0.02 75);
-  --color-ink: oklch(20% 0.008 260); --color-ink-2: oklch(36% 0.008 260); --color-muted: oklch(50% 0.008 260);
-  --color-rule: oklch(89% 0.008 80); --color-rule-strong: oklch(20% 0.008 260);
-  --color-accent: oklch(20% 0.008 260); --color-accent-hover: oklch(34% 0.008 260); --color-accent-ink: oklch(99% 0.004 85); --color-focus: oklch(50% 0.16 250);
-  /* Valor gold, from the phone number on the business card. Marks, rules and highlights on dark; never body text on paper. */
-  --color-gold: #C8A55A; --color-gold-deep: #9C7A33;
-  --font-display: "Instrument Serif", ui-serif, Georgia, serif; --font-body: "Inter", ui-sans-serif, system-ui, sans-serif; --font-outlier: var(--font-display);
+  /* Silver on onyx: black car, chrome detail. No gold. "paper" is the page, "ink" the text on it. */
+  --color-paper: #0B0C0E; --color-paper-2: #16181C; --color-paper-3: #121418;
+  --color-stripe: #121418; --color-stripe-deep: #23262C;
+  --color-ink: #F2F4F7; --color-ink-2: #C9CFD6; --color-muted: #8E97A1;
+  --color-rule: #2C3036; --color-rule-strong: #4A5058;
+  --color-accent: #E8EBEF; --color-accent-hover: #FFFFFF; --color-accent-ink: #0B0C0E; --color-focus: #9CC3FF;
+  --color-onyx: #0B0C0E; --color-graphite: #16181C; --color-gunmetal: #23262C; --color-steel: #7C858F; --color-silver: #B9C0C8; --color-platinum: #E8EBEF;
+  --chrome: linear-gradient(180deg, #FFFFFF 0%, #DDE2E8 46%, #8F98A3 54%, #C9CFD6 78%, #F2F4F7 100%);
+  --font-display: "Cormorant Garamond", ui-serif, Georgia, serif; --font-body: "Manrope", ui-sans-serif, system-ui, sans-serif; --font-outlier: var(--font-display);
   --radius-card: 14px; --radius-well: 10px; --radius-pill: 999px; --rule-hair: 1px; --rule-bar: 1px;
-  --shadow-sheet: 0 30px 60px -40px oklch(21% 0.025 255 / 0.35); --shadow-caption: 0 1px 8px oklch(10% 0.02 255 / 0.9);
+  --shadow-sheet: 0 40px 80px -40px rgb(0 0 0 / 0.8); --shadow-caption: 0 1px 8px oklch(10% 0.02 255 / 0.9);
   --shadow-sign: 0 2px 0 oklch(21% 0.025 255 / 0.12), 0 30px 50px -24px oklch(21% 0.025 255 / 0.45);
-  --tracking-display: -0.015em; --display-weight: 400;
+  --tracking-display: -0.01em; --display-weight: 500;
 }
