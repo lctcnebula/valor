@@ -80,7 +80,7 @@ input:disabled, textarea:disabled { background: var(--color-paper-2); color: var
 .header-row { display: flex; align-items: center; gap: var(--space-lg); min-height: 108px; }
 .header-logo { height: 92px; }
 .logo.header-logo svg { overflow: hidden; }
-.header-logo { margin-left: -4px; }
+.header-logo { margin-left: -9px; }
 .brand-link { display: inline-flex; color: var(--color-ink); text-decoration: none; }
 .logo { display: block; line-height: 0; }
 .logo svg { display: block; height: 100%; width: auto; overflow: visible; }

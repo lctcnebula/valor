@@ -54,9 +54,9 @@ but if they don't offer it, remove the sign request from `components/Forms.jsx`.
 
 ## Brand
 
-Silver on onyx, no gold. Guidelines live at `/brand` (linked in the footer, not indexed). The logo is a single
-silver line that draws a full-size SUV in side view on its wheels (no windows, no door lines), with "Valor" in chrome
-Cormorant Garamond Italic inside the car and LIMO (DM Sans) below it, outside, between two steel rules. On screen the
+Silver on onyx, no gold. Guidelines live at `/brand` (linked in the footer, not indexed). The logo is a sedan
+drawn as one calligraphic silver stroke (`scripts/build-car.mjs` writes `lib/car-paths.mjs`), with "Valor" in chrome
+Cormorant Garamond Italic under its roof and LIMO (DM Sans) below it, outside, between two steel rules. On screen the
 light draws it: a spark traces the line, the headlight switches on, "Valor" fades up, and it draws once and stays; only a gloss keeps sweeping the chrome, every 5 s. Body text is DM Sans. Reduced motion turns it all off.
 
 - Markup: `lib/logo-svg.mjs` (layouts: stacked, header, horizontal, car; dark or light; animated or still; plus the monogram).
