@@ -11,7 +11,7 @@ const LOGOS = [
   { file: "valor-logo.svg", name: "Primary, animated", use: "Silver on onyx, with the spark and gloss. The website and anything on screen.", bg: "ink", art: <Logo id="t-primary" /> },
   { file: "valor-logo-light.svg", name: "Primary, on light", use: "Graphite on white or silver stock. Print, documents, light pages. Never animated.", bg: "light", art: <Logo id="t-light" theme="light" animated={false} /> },
   { file: "valor-logo-horizontal.svg", name: "Horizontal", use: "Valor and LIMO on one line. Email signature, the quote sheet, anywhere short and wide.", bg: "ink", art: <Logo id="t-horiz" layout="horizontal" /> },
-  { file: "valor-car.svg", name: "The silver line", use: "The car on its own, as a detail: the close of a page, a receipt, a sign.", bg: "ink", art: <Logo id="t-car" layout="car" title="" /> },
+  { file: "valor-car.svg", name: "Without LIMO", use: "The SUV with Valor inside, without LIMO: the close of a page, a receipt, a sign.", bg: "ink", art: <Logo id="t-car" layout="car" title="" /> },
   { file: "valor-monogram.svg", name: "Monogram", use: "The V over the roofline in a ring. App icon, favicon, social avatar.", bg: "ink", art: <Monogram id="t-mono" className="tile-mark" /> },
   { file: "valor-logo-static.svg", name: "Primary, still", use: "The primary logo without motion. Video, slides, anywhere SVG animation won’t play.", bg: "ink", art: <Logo id="t-static" animated={false} /> },
 ];
@@ -27,11 +27,10 @@ const COLOURS = [
 
 const MOTION = [
   ["Draw", "Once, in about 4 s. A spark of light draws the silver line as it travels: the road, up into the roofline and back down, in 2.3 s."],
-  ["Details", "The wheels, windows, doors and body lines draw in behind the spark, from 1 s to 3.2 s."],
-  ["Headlight", "Switches on as the spark passes it, then pulses gently."],
-  ["Wordmark", "“Valor” fades up as the car finishes, then LIMO. Then the logo stays."],
+    ["Headlight", "Switches on as the spark passes it, then pulses gently."],
+  ["Wordmark", "“Valor” fades up inside the car as the line finishes, then LIMO below it. Then the logo stays."],
   ["Gloss", "Once drawn, the logo never redraws. Only a gloss sweeps the chrome and the car, every 5 s, on a loop."],
-  ["Header", "The full logo sits top left, with “Valor” at twice the size. It draws once when you arrive, not on every page."],
+  ["Header", "The full logo sits top left. It draws once when you arrive, not on every page."],
   ["On scroll", "Each logo draws the first time it comes into view. Sections and photos rise in as you scroll."],
   ["Monogram", "The spark circles the ring once every 5 s."],
   ["Reduced motion", "All motion stops for visitors who ask for less. The still logo is what they see."],
@@ -39,7 +38,7 @@ const MOTION = [
 
 const DONTS = [
   "Add gold, or any colour. Valor is silver and black.",
-  "Stretch, squash, rotate or redraw the car.",
+  "Stretch, squash or rotate the car, or add windows or wheels to it.",
   "Retype “Valor” in another font, or set it upright. Use the files.",
   "Use the chrome gradient on anything but the wordmark.",
   "Put the logo on a busy photo without a dark band behind it.",
@@ -54,8 +53,8 @@ export default function Brand() {
           <p className="brand-kicker">Brand guidelines · v2 · November 2026</p>
           <h1>Valor Limo, in silver.</h1>
           <p className="lead">
-            Black car, silver light, plain words. One silver line draws the sedan, and a spark of light travels along it
-            to the headlight. The chrome “Valor” catches the same light. Silver and black only, no gold.
+            Black car, silver light, plain words. One silver line draws an SUV in side view, and a spark of light travels
+            along it to the headlight. The chrome “Valor” sits inside the car and catches the same light. Silver and black only, no gold.
           </p>
         </div>
       </section>
@@ -74,9 +73,9 @@ export default function Brand() {
           </div>
           <div className="brand-body">
             <p className="brand-text">
-              <strong>Valor</strong> in Cormorant Garamond Italic, filled with chrome. Under it, <strong>the silver
-              line</strong>: the road rising into a long sedan in side view, with wheels, windows and a headlight, then
-              back down to the road. Below, <strong>LIMO</strong> in DM Sans between two steel rules. Use the primary
+              <strong>The silver line</strong>: the road rising into an SUV in side view (tailgate, roof, windshield,
+              hood) and back down to the road. No windows, no wheels. Inside it, <strong>Valor</strong> in Cormorant
+              Garamond Italic, filled with chrome. Below, outside the car, <strong>LIMO</strong> in DM Sans between two steel rules. Use the primary
               logo where there is room, the horizontal one in headers, and the monogram where only a square fits.
             </p>
             <ul className="logo-grid">
@@ -132,7 +131,7 @@ export default function Brand() {
               <div><dt>Primary, smallest</dt><dd>160 px wide on screen · 40 mm in print</dd></div>
               <div><dt>Horizontal, smallest</dt><dd>110 px wide · 28 mm</dd></div>
               <div><dt>Monogram, smallest</dt><dd>16 px (the favicon) · 8 mm</dd></div>
-              <div><dt>Header on this site</dt><dd>The header logo, top left: “Valor” at twice the size over the car, 92 px tall, 64 px on phones</dd></div>
+              <div><dt>Header on this site</dt><dd>The header logo, top left: the SUV with “Valor” inside, 92 px tall, 62 px on phones</dd></div>
             </dl>
           </div>
         </div>

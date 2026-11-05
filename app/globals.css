@@ -79,8 +79,8 @@ input:disabled, textarea:disabled { background: var(--color-paper-2); color: var
 .header { position: sticky; top: 0; z-index: var(--z-sticky-nav); background: color-mix(in oklab, var(--color-paper) 88%, transparent); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border-bottom: var(--rule-hair) solid var(--color-rule); }
 .header-row { display: flex; align-items: center; gap: var(--space-lg); min-height: 108px; }
 .header-logo { height: 92px; }
-.logo.header-logo svg { overflow: hidden; -webkit-mask-image: linear-gradient(90deg, transparent, #000 7%, #000 93%, transparent); mask-image: linear-gradient(90deg, transparent, #000 7%, #000 93%, transparent); }
-.header-logo { margin-left: -26px; }
+.logo.header-logo svg { overflow: hidden; -webkit-mask-image: linear-gradient(90deg, transparent, #000 4%, #000 96%, transparent); mask-image: linear-gradient(90deg, transparent, #000 4%, #000 96%, transparent); }
+.header-logo { margin-left: -18px; }
 .brand-link { display: inline-flex; color: var(--color-ink); text-decoration: none; }
 .logo { display: block; line-height: 0; }
 .logo svg { display: block; height: 100%; width: auto; overflow: visible; }
@@ -109,7 +109,7 @@ input:disabled, textarea:disabled { background: var(--color-paper-2); color: var
   .header-actions { margin-left: auto; }
   .menu-btn { display: inline-flex; align-items: center; }
 }
-@media (max-width: 40rem) { .header-phone { display: none; } .header-row { min-height: 80px; } .header-logo { height: 64px; margin-left: -18px; } }
+@media (max-width: 40rem) { .header-phone { display: none; } .header-row { min-height: 80px; } .header-logo { height: 62px; margin-left: -12px; } }
 @media (min-width: 68.01rem) { .mobile-menu { display: none; } }
 
 /* ---------- the flag's stripes ---------- */
@@ -284,7 +284,7 @@ input:disabled, textarea:disabled { background: var(--color-paper-2); color: var
 .logo-tile .logo svg { width: 100%; height: auto; }
 .logo-tile .logo-horizontal { width: 62%; }
 .logo-tile .tile-mark { width: 38%; max-width: 200px; }
-.close-car { height: 74px; margin: 0 0 var(--space-xl) -20px; }
+.close-car { height: 130px; margin: 0 0 var(--space-xl) -24px; }
 .logo-meta { display: flex; justify-content: space-between; align-items: start; gap: var(--space-md); margin-top: var(--space-sm); }
 .logo-name { font-weight: 500; }
 .logo-use { font-size: var(--text-sm); color: var(--color-muted); max-width: 46ch; }

@@ -54,12 +54,12 @@ but if they don't offer it, remove the sign request from `components/Forms.jsx`.
 
 ## Brand
 
-Silver on onyx, no gold. Guidelines live at `/brand` (linked in the footer, not indexed). The logo is "Valor" in
-chrome Cormorant Garamond Italic over a single silver line that rises from the road into a sedan in side view, with
-LIMO (DM Sans) between two steel rules. On screen the light draws it: a spark traces the line, the car's details
-draw in behind it, the headlight switches on, "Valor" fades up and it draws once and stays; only a gloss keeps sweeping the chrome, every 5 s. Body text is DM Sans. Reduced motion turns it all off.
+Silver on onyx, no gold. Guidelines live at `/brand` (linked in the footer, not indexed). The logo is a single
+silver line that rises from the road into an SUV in side view (no windows, no wheels), with "Valor" in chrome
+Cormorant Garamond Italic inside the car and LIMO (DM Sans) below it, outside, between two steel rules. On screen the
+light draws it: a spark traces the line, the headlight switches on, "Valor" fades up, and it draws once and stays; only a gloss keeps sweeping the chrome, every 5 s. Body text is DM Sans. Reduced motion turns it all off.
 
-- Markup: `lib/logo-svg.mjs` (layouts: stacked, horizontal, car; dark or light; animated or still; plus the monogram).
+- Markup: `lib/logo-svg.mjs` (layouts: stacked, header, horizontal, car; dark or light; animated or still; plus the monogram).
 - In code: `components/Logo.jsx` (`<Logo id="unique" layout="..." />`, `<Monogram />`). Each instance needs a unique `id`.
 - Files: `public/brand/*.svg` and `app/icon.svg`, written by `node scripts/export-logos.mjs`. `app/apple-icon.png` is a
   180 px render of the icon.
