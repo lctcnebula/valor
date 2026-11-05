@@ -26,9 +26,11 @@ const COLOURS = [
 ];
 
 const MOTION = [
-  ["Spark", "Runs the silver line from the rear to the headlight with a short light trail. 4.8 s loop: about 3.4 s running, then a rest."],
-  ["Gloss", "A white band sweeps the wordmark and the car every 6 s, blended in screen mode, so the chrome catches light."],
-  ["Headlight", "Pulses gently, 3 s. It is the last thing the spark reaches."],
+  ["Draw", "One 10 s cycle. A spark of light draws the silver line as it travels: the road, up into the roofline and back down, in 3.5 s."],
+  ["Details", "The wheels, windows, doors and body lines draw in behind the spark, from 1.6 s to 5 s."],
+  ["Headlight", "Switches on as the spark passes it, then pulses gently."],
+  ["Wordmark", "“Valor” fades up as the car finishes, then LIMO. A gloss sweeps the chrome and the car at 5.2 s."],
+  ["Rest", "The finished logo holds for about 4 s, fades, and draws again."],
   ["Monogram", "The spark circles the ring once every 5 s."],
   ["Reduced motion", "All motion stops for visitors who ask for less. The still logo is what they see."],
 ];
@@ -101,7 +103,7 @@ export default function Brand() {
           </div>
           <div className="brand-body brand-two">
             <p className="brand-text">
-              The logo moves like light on a polished car at night: slowly, then it rests. Motion is for screens only; in
+              The logo is drawn by light, like a headlight tracing a car at night: slowly, then it rests. Motion is for screens only; in
               print the logo is still.
             </p>
             <dl className="spec-list">

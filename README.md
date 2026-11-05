@@ -53,8 +53,8 @@ but if they don't offer it, remove the sign request from `components/Forms.jsx`.
 
 Silver on onyx, no gold. Guidelines live at `/brand` (linked in the footer, not indexed). The logo is "Valor" in
 chrome Cormorant Garamond Italic over a single silver line that rises from the road into a sedan in side view, with
-LIMO (Manrope) between two steel rules. On screen it moves: a spark with a light trail runs the line to the
-headlight, a gloss sweeps the chrome, and the headlight pulses. Reduced motion turns it all off.
+LIMO (Manrope) between two steel rules. On screen the light draws it: a spark traces the line, the car's details
+draw in behind it, the headlight switches on, "Valor" fades up and a gloss sweeps the chrome, then it rests and redraws. Reduced motion turns it all off.
 
 - Markup: `lib/logo-svg.mjs` (layouts: stacked, horizontal, car; dark or light; animated or still; plus the monogram).
 - In code: `components/Logo.jsx` (`<Logo id="unique" layout="..." />`, `<Monogram />`). Each instance needs a unique `id`.
