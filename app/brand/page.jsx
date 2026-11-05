@@ -28,6 +28,7 @@ const COLOURS = [
 const MOTION = [
   ["Draw", "Once, in about 4 s. A spark of light draws the silver line as it travels: the road, up into the roofline and back down, in 2.3 s."],
     ["Headlight", "Switches on as the spark passes it, then pulses gently."],
+  ["Wheels", "The wheels draw in behind the spark, and the road fades up under them."],
   ["Wordmark", "“Valor” fades up inside the car as the line finishes, then LIMO below it. Then the logo stays."],
   ["Gloss", "Once drawn, the logo never redraws. Only a gloss sweeps the chrome and the car, every 5 s, on a loop."],
   ["Header", "The full logo sits top left. It draws once when you arrive, not on every page."],
@@ -38,7 +39,7 @@ const MOTION = [
 
 const DONTS = [
   "Add gold, or any colour. Valor is silver and black.",
-  "Stretch, squash or rotate the car, or add windows or wheels to it.",
+  "Stretch, squash or rotate the car, or add windows or doors to it. The inside belongs to “Valor”.",
   "Retype “Valor” in another font, or set it upright. Use the files.",
   "Use the chrome gradient on anything but the wordmark.",
   "Put the logo on a busy photo without a dark band behind it.",
@@ -73,8 +74,9 @@ export default function Brand() {
           </div>
           <div className="brand-body">
             <p className="brand-text">
-              <strong>The silver line</strong>: the road rising into an SUV in side view (tailgate, roof, windshield,
-              hood) and back down to the road. No windows, no wheels. Inside it, <strong>Valor</strong> in Cormorant
+              <strong>The silver line</strong>: one unbroken outline of a full-size SUV in side view (upright tailgate,
+              long roof, raked windshield, high hood, both wheel arches) on its wheels and a road. No windows, no door
+              lines. Inside it, <strong>Valor</strong> in Cormorant
               Garamond Italic, filled with chrome. Below, outside the car, <strong>LIMO</strong> in DM Sans between two steel rules. Use the primary
               logo where there is room, the horizontal one in headers, and the monogram where only a square fits.
             </p>
