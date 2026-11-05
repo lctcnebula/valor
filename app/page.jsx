@@ -48,7 +48,7 @@ export default function Home() {
           </div>
           <article className="sheet" aria-label="Sample quote">
             <header className="sheet-head">
-              <Logo className="sheet-logo" />
+              <Logo variant="inline" className="sheet-logo" />
               <span>Quote, sample</span>
             </header>
             <p className="sheet-for">Prepared for <strong>You</strong></p>

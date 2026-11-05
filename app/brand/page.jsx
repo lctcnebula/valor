@@ -8,28 +8,27 @@ export const metadata = {
 };
 
 const LOGOS = [
-  { file: "valor-logo.svg", name: "Primary", use: "The default. On paper and light backgrounds.", bg: "paper" },
-  { file: "valor-logo-reversed.svg", name: "Reversed", use: "On black: cars, signage, the business card.", bg: "ink" },
-  { file: "valor-logo-stacked.svg", name: "Badge", use: "The car over the name. Square spaces: social, the car door, signs.", bg: "paper" },
-  { file: "valor-logo-stacked-reversed.svg", name: "Badge, reversed", use: "The badge on black: the business card, the arrivals sign.", bg: "ink" },
-  { file: "valor-icon.svg", name: "App icon", use: "The car between the card’s light lines. Favicon, phone home screen, profile pictures.", bg: "paper" },
+  { file: "valor-logo.svg", name: "Primary", use: "Valor, the car and LIMO. The default on paper: the footer, documents, signs.", bg: "paper" },
+  { file: "valor-logo-reversed.svg", name: "Reversed", use: "On black: the business card, the cars, the arrivals sign.", bg: "ink" },
+  { file: "valor-logo-inline.svg", name: "Compact", use: "Valor over a heavier car. Small, tight spaces: the site header, the quote sheet.", bg: "paper" },
+  { file: "valor-logo-inline-reversed.svg", name: "Compact, reversed", use: "The compact logo on black: email signatures, dark headers.", bg: "ink" },
+  { file: "valor-icon.svg", name: "App icon", use: "The italic V over the car on black. Favicon, phone home screen, profile pictures.", bg: "paper" },
   { file: "valor-car.svg", name: "The car", use: "On its own, as a detail: the close of a page, a receipt, an email footer.", bg: "ink" },
   { file: "valor-logo-mono.svg", name: "One colour", use: "Fax, stamps, embossing, anywhere gold can’t print.", bg: "paper" },
-  { file: "valor-mark.svg", name: "The V", use: "On its own only once the name is already on the page.", bg: "ink" },
 ];
 
 const COLOURS = [
   { name: "Ink", hex: "#14161A", token: "--color-ink", use: "Text, buttons, the black of the card and the cars.", swatch: "var(--color-ink)", dark: true },
   { name: "Paper", hex: "#FCFAF7", token: "--color-paper", use: "The page. Warm white, never pure white.", swatch: "var(--color-paper)" },
   { name: "Stone", hex: "#F2EFE9", token: "--color-stripe", use: "Quiet bands: the hero, panels, the received notice.", swatch: "var(--color-stripe)" },
-  { name: "Gold", hex: "#C8A55A", token: "--color-gold", use: "The V, the LIMO rules, phone numbers on black. Never for text on paper.", swatch: "var(--color-gold)", dark: true },
+  { name: "Gold", hex: "#C8A55A", token: "--color-gold", use: "The car, LIMO and its rules, phone numbers on black. Never for text on paper.", swatch: "var(--color-gold)", dark: true },
   { name: "Graphite", hex: "#616368", token: "--color-muted", use: "Hints, captions, secondary lines.", swatch: "var(--color-muted)", dark: true },
 ];
 
 const DONTS = [
-  "Stretch, squash, rotate or outline the logo.",
-  "Retype the wordmark in another font. Use the files.",
-  "Recolour the V. It is gold, ink or paper, nothing else.",
+  "Stretch, squash or rotate the logo, or thicken the car’s lines.",
+  "Retype “Valor” in another font, or set it upright. Use the files.",
+  "Recolour the car. It is gold, ink or paper, nothing else.",
   "Set gold text on paper: it fails contrast (2.2 : 1).",
   "Put the logo on a busy photo without a dark band behind it.",
   "Add shadows, glows or gradients.",
@@ -51,7 +50,7 @@ export default function Brand() {
 
       <section className="brand-hero" aria-label="The logo">
         <div className="container brand-hero-inner">
-          <img className="brand-hero-badge" src="/brand/valor-logo-stacked-reversed.svg" alt="Valor Limo badge: the gold car over the name" />
+          <img className="brand-hero-badge" src="/brand/valor-logo-reversed.svg" alt="Valor Limo logo: Valor in italic over a gold sedan, LIMO beneath" />
         </div>
       </section>
 
@@ -63,11 +62,10 @@ export default function Brand() {
           </div>
           <div className="brand-body">
             <p className="brand-text">
-              Two marks from the business card. <strong>The car</strong>: a front-on sports sedan in gold, the Valor V on
-              its grille and the card’s spark on the windshield. <strong>The V</strong>: a high-contrast serif, a thick
-              stroke and a hairline, with the same spark. With them, <strong>VALOR</strong> in Instrument Serif and{" "}
-              <strong>LIMO</strong> in Inter between two gold rules. The car leads: in the site header, the badge
-              and the app icon. The V is the fallback where the car can’t hold its detail (stamps, embossing, tiny print).
+              <strong>Valor</strong> in Cormorant Garamond Italic, written large. Under it, <strong>the car</strong>: a
+              long sedan in side view, drawn in one weight of gold line, with the card’s spark on its headlight. Below,{" "}
+              <strong>LIMO</strong> in Inter between two gold rules. Use the primary logo where there is room, the
+              compact one in small spaces (the site header), and the app icon only where a square is needed.
             </p>
             <ul className="logo-grid">
               {LOGOS.map((l) => (
@@ -103,11 +101,11 @@ export default function Brand() {
               <figcaption>Clear space: the height of the word VALOR on every side. Nothing enters the dashed line.</figcaption>
             </figure>
             <dl className="spec-list">
-              <div><dt>Primary, smallest</dt><dd>120 px wide on screen · 30 mm in print</dd></div>
-              <div><dt>Stacked, smallest</dt><dd>72 px wide · 18 mm</dd></div>
+              <div><dt>Primary, smallest</dt><dd>140 px wide on screen · 35 mm in print</dd></div>
+              <div><dt>Compact, smallest</dt><dd>80 px wide · 20 mm</dd></div>
               <div><dt>App icon, smallest</dt><dd>16 px (the favicon) · 6 mm</dd></div>
-              <div><dt>The car alone, smallest</dt><dd>32 px wide · 10 mm</dd></div>
-              <div><dt>Header on this site</dt><dd>40 px tall, 34 px on phones</dd></div>
+              <div><dt>The car alone, smallest</dt><dd>120 px wide · 30 mm</dd></div>
+              <div><dt>Header on this site</dt><dd>Compact, 54 px tall, 46 px on phones</dd></div>
             </dl>
           </div>
         </div>
@@ -148,7 +146,7 @@ export default function Brand() {
             <div className="type-card">
               <p className="type-specimen serif">Aa</p>
               <p className="logo-name">Instrument Serif</p>
-              <p className="logo-use">Headlines, the wordmark VALOR, big numbers. Regular and italic only. Set large, never below 24 px.</p>
+              <p className="logo-use">Headlines and big numbers on the site. Regular and italic only. Set large, never below 24 px. (The “Valor” in the logo is Cormorant Garamond Italic, outlined: use the logo files, not the font.)</p>
               <p className="type-sample serif">Your total, in writing, before the ride.</p>
             </div>
             <div className="type-card">
@@ -208,7 +206,7 @@ export default function Brand() {
           <div className="brand-body">
             <div className="card-mock" aria-label="Business card, redrawn in the new brand">
               <div className="card-face">
-                <img src="/brand/valor-logo-stacked-reversed.svg" alt="" className="card-logo" />
+                <img src="/brand/valor-logo-reversed.svg" alt="" className="card-logo" />
               </div>
               <div className="card-face card-back">
                 <p className="card-names">{SITE.team}</p>
@@ -217,7 +215,7 @@ export default function Brand() {
                 <p className="card-area">Serving {SITE.areaLong}</p>
               </div>
             </div>
-            <p className="note">The business card, redrawn: front and back, 3.5 × 2 in, on black stock with gold foil for the V and phone.</p>
+            <p className="note">The business card, redrawn: front and back, 3.5 × 2 in, on black stock with gold foil for the car and phone.</p>
           </div>
         </div>
       </section>

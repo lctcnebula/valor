@@ -50,15 +50,16 @@ but if they don't offer it, remove the sign request from `components/Forms.jsx`.
 
 ## Brand
 
-Logo and guidelines live at `/brand` (linked in the footer, not indexed). The logo is a high-contrast serif V
-with a four-point spark, beside VALOR (Instrument Serif) and LIMO (Inter) between two gold rules. Gold `#C8A55A`
-comes from the phone number on Valor's business card.
+Logo and guidelines live at `/brand` (linked in the footer, not indexed). The logo is "Valor" in Cormorant
+Garamond Italic over a gold line drawing of a sedan in side view (the business card's spark on its headlight), with
+LIMO (Inter) between two gold rules. Gold `#C8A55A` comes from the phone number on Valor's business card.
 
-- Two marks from the business card: the gold car (front view, V on the grille, spark on the windshield) for the badge
-  and app icon, and the serif V for one-line uses like the header.
-- Logo files: `public/brand/*.svg` (primary, reversed, badge, app icon, the car, one colour, the V). Favicon: `app/icon.svg`, `app/apple-icon.png`.
+- Lockups: primary (Valor, car, LIMO), compact (Valor over a heavier car, for the header) and the car alone.
+- Logo files: `public/brand/*.svg` (primary, reversed, compact, compact reversed, app icon, the car, one colour).
+  Favicon: `app/icon.svg`, `app/apple-icon.png`.
 - In code: `components/Logo.jsx`, drawing outlines from `lib/logo-paths.js`.
-- To change the logo, edit `scripts/build-logo.py` and rerun it (instructions at the top); it rewrites all of the above.
+- To change the logo, edit `scripts/build-logo.py` and rerun it (instructions at the top; needs fonttools and
+  uharfbuzz); it rewrites all of the above except `app/apple-icon.png`, which is a 180 px render of the icon.
 
 ## Run
 

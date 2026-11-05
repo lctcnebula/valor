@@ -24,7 +24,7 @@ export default function Header() {
     <header className="header">
       <div className="container header-row">
         <Link className="brand-link" href="/" aria-label={`${SITE.name} home`}>
-          <Logo variant="car-horizontal" title={`${SITE.name} home`} />
+          <Logo variant="inline" title={`${SITE.name} home`} />
         </Link>
         <nav className="header-nav" aria-label="Primary">
           {NAV.map((n) => (

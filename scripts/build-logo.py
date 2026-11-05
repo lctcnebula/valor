@@ -1,221 +1,200 @@
-"""Builds the Valor Limo logo (outlined wordmark + V mark) into public/brand, app/icon.svg and lib/logo-paths.js.
+"""Builds the Valor Limo logo into public/brand/*.svg, app/icon.svg and lib/logo-paths.js.
 
-Usage: python3 scripts/build-logo.py <dir with InstrumentSerif-Regular.ttf and Inter.ttf> .
-Fonts: github.com/google/fonts (ofl/instrumentserif, ofl/inter). Needs fonttools."""
+The logo: "Valor" in Cormorant Garamond Italic, a gold line drawing of a sedan in side view under it
+(the headlight carries the business card's spark), and LIMO in Inter between two gold rules.
+
+Usage: python3 scripts/build-logo.py <fonts dir> .
+  fonts dir holds CormorantGaramond-Italic.ttf and Inter.ttf (variable fonts from github.com/google/fonts,
+  ofl/cormorantgaramond and ofl/inter). Needs fonttools and uharfbuzz (for kerning)."""
 import json, os, sys
+import uharfbuzz as hb
+from io import BytesIO
 from fontTools.ttLib import TTFont
 from fontTools.pens.svgPathPen import SVGPathPen
+from fontTools.pens.boundsPen import BoundsPen
 from fontTools.pens.transformPen import TransformPen
 from fontTools.varLib.instancer import instantiateVariableFont
 
-FONTS = sys.argv[1]
-ROOT = sys.argv[2]
-
-serif = TTFont(os.path.join(FONTS, "InstrumentSerif-Regular.ttf"))
-inter = instantiateVariableFont(TTFont(os.path.join(FONTS, "Inter.ttf")), {"wght": 500, "opsz": 14})
+FONTS, ROOT = sys.argv[1], sys.argv[2]
+GOLD, INK, PAPER = "#C8A55A", "#14161A", "#FCFAF7"
 
 
-def text_path(font, text, size, tracking_em=0.0, x0=0.0, baseline=0.0):
-    """Outline `text` at `size` px with tracking; returns (d, width). Baseline at y=baseline."""
+def load(name, axes):
+    font = instantiateVariableFont(TTFont(os.path.join(FONTS, name)), axes)
+    buf = BytesIO(); font.save(buf)
+    return font, hb.Font(hb.Face(buf.getvalue()))
+
+
+cormorant = load("CormorantGaramond-Italic.ttf", {"wght": 500})
+inter = load("Inter.ttf", {"wght": 500, "opsz": 14})
+
+num = lambda v: f"{v:.2f}".rstrip("0").rstrip(".")
+
+
+def outline(font_pair, text, size, tracking_em=0.0):
+    """Shape `text` (with kerning), outline it at `size` with the baseline at y=0, left ink edge at x=0.
+    Returns (path d, ink width, cap top as a negative y)."""
+    font, hbfont = font_pair
     upm = font["head"].unitsPerEm
-    cmap = font.getBestCmap()
-    gs = font.getGlyphSet()
-    hmtx = font["hmtx"]
     s = size / upm
-    pen = SVGPathPen(gs, ntos=lambda v: f"{v:.2f}".rstrip("0").rstrip("."))
-    x = x0
-    for i, ch in enumerate(text):
-        g = cmap[ord(ch)]
-        tp = TransformPen(pen, (s, 0, 0, -s, x, baseline))
-        gs[g].draw(tp)
-        x += hmtx[g][0] * s
-        if i < len(text) - 1:
-            x += tracking_em * size
-    return pen.getCommands(), x - x0
+    buf = hb.Buffer(); buf.add_str(text); buf.guess_segment_properties()
+    hb.shape(hbfont, buf, {"kern": True, "liga": False})
+    order = font.getGlyphOrder(); gs = font.getGlyphSet()
+    placed, x = [], 0.0
+    for i, (info, pos) in enumerate(zip(buf.glyph_infos, buf.glyph_positions)):
+        placed.append((order[info.codepoint], x + pos.x_offset * s))
+        x += pos.x_advance * s + (tracking_em * size if i < len(buf.glyph_infos) - 1 else 0)
+    bp = BoundsPen(gs)
+    for g, gx in placed:
+        gs[g].draw(TransformPen(bp, (s, 0, 0, -s, gx, 0)))
+    x0, y0, x1, y1 = bp.bounds
+    pen = SVGPathPen(gs, ntos=num)
+    for g, gx in placed:
+        gs[g].draw(TransformPen(pen, (s, 0, 0, -s, gx - x0, 0)))
+    return pen.getCommands(), x1 - x0, y0
 
 
-def ink_bounds(font, text, size, tracking_em=0.0):
-    """Left side bearing of first glyph and right bearing of last, so lockups align to ink not advance."""
-    from fontTools.pens.boundsPen import BoundsPen
-    upm = font["head"].unitsPerEm
-    cmap = font.getBestCmap(); gs = font.getGlyphSet(); hmtx = font["hmtx"]
-    s = size / upm
-    x = 0; xmin = None; xmax = None
-    for i, ch in enumerate(text):
-        g = cmap[ord(ch)]
-        bp = BoundsPen(gs); gs[g].draw(bp)
-        if bp.bounds:
-            a, _, b, _ = bp.bounds
-            xmin = x + a * s if xmin is None else min(xmin, x + a * s)
-            xmax = x + b * s if xmax is None else max(xmax, x + b * s)
-        x += hmtx[g][0] * s
-        if i < len(text) - 1:
-            x += tracking_em * size
-    return xmin, xmax
+# ---------- the car: a sedan in side view, front to the left, 300 x 62 units, ground at y 60.5 ----------
+# (kind, attrs, stroke width). Widths are multiplied by `weight` so small lockups stay legible.
+CAR = [
+    ("path", 'd="M9 44.75 C7.6 40.48 8.4 37.06 12 35.6 C30 32.67 60 29.99 94 27.79 C106 19.74 118 11.93 132 8.03 C150 4.37 172 4.37 190 7.05 C205 9.74 219 17.3 233 24.62 C250 26.08 268 27.06 279 28.52 C286 29.5 290 33.16 291 38.04 L291.5 44.75"', 1.8),
+    ("path", 'd="M9 44.75 C10 47.8 12.5 49.02 16 49.02 H42 C43 34.38 51 26.45 62 26.45 C73 26.45 81 34.38 82 49.02 H220 C221 34.38 229 26.45 240 26.45 C251 26.45 259 34.38 260 49.02 H284 C288 49.02 291 47.8 291.5 44.75"', 1.8),
+    ("path", 'd="M101 27.06 C111 19.74 121 13.64 133 10.71 C150 7.54 170 7.54 187 9.74 C200 11.93 211 17.3 221 25.11 Z"', 1),
+    ("path", 'd="M161 8.76 V27.06"', 1),
+    ("path", 'd="M16 38.53 C80 34.87 180 32.67 286 33.89" opacity=".85"', 0.8),
+    ("path", 'd="M100 27.55 C99 34.38 99.5 41.7 101 49.02 M161 27.06 C160.5 34.38 160.8 41.7 161.6 49.02 M221 25.11 C224 29.5 225 34.38 224.8 39.26" opacity=".85"', 0.8),
+    ("path", 'd="M137 36.09 H145 M196 35.36 H204"', 1.2),
+    ("path", 'd="M97 27.3 C99 24.13 103 23.64 105.5 25.11 C104 27.3 101 28.28 97 27.3 Z"', 1.2),
+    ("path", 'd="M12.5 36.33 C18 34.87 25 34.14 31 34.62 C26 37.06 19 38.04 13 38.04"', 1.2),
+    ("path", 'd="M12 43.16 H26"', 0.8),
+    ("path", 'd="M281 30.23 C285 30.72 288 32.43 289.6 35.11"', 1.4),
+    ("circle", 'cx="62" cy="44.2" r="14.6"', 1.8),
+    ("circle", 'cx="62" cy="44.2" r="9.4"', 0.8),
+    ("circle", 'cx="240" cy="44.2" r="14.6"', 1.8),
+    ("circle", 'cx="240" cy="44.2" r="9.4"', 0.8),
+]
 
 
-# ---------- the mark: a high-contrast serif V with a four-point spark ----------
-# 100 x 100 box. Thick left stroke, hairline right stroke, flat top serifs, meeting at a sharp vertex.
-MARK = {
-    "v": "M14 18 H40 V21 H35.2 L55.47 69.68 L74.8 21 H60 V18 H84 V21 H77.4 L52.6 82 H50 L24.6 21 H14 Z",
-    # four-point spark, top right (the shine on the card's car)
-    "spark": "M90 6 C90.7 12.2 93.3 14.8 99.5 15.5 C93.3 16.2 90.7 18.8 90 25 C89.3 18.8 86.7 16.2 80.5 15.5 C86.7 14.8 89.3 12.2 90 6 Z",
+def spark_d(x, y, r):
+    a, b = 0.12 * r, 0.3 * r
+    p = lambda dx, dy: f"{num(x + dx)} {num(y + dy)}"
+    return (f"M{p(0, -r)} C{p(a, -b)} {p(b, -a)} {p(r, 0)} C{p(b, a)} {p(a, b)} {p(0, r)} "
+            f"C{p(-a, b)} {p(-b, a)} {p(-r, 0)} C{p(-b, -a)} {p(-a, -b)} {p(0, -r)} Z")
+
+
+CAR_FILLS = ('<circle cx="62" cy="44.2" r="2.4"/><circle cx="240" cy="44.2" r="2.4"/>'
+             '<path d="M-8 60.49 C60 59.88 240 59.88 310 60.49 C240 61.1 60 61.1 -8 60.49 Z" opacity=".55"/>'
+             f'<path d="{spark_d(9, 36.1, 5.5)}"/>')
+CAR_BOX = (-8, 0, 318, 62)  # x, y, w, h of the drawing incl. ground line and spark
+
+
+def car_markup(weight=1.0, ground=True):
+    """Inner SVG of the car in currentColor."""
+    strokes = "".join(f'<{k} {a} stroke-width="{num(w * weight)}"/>' for k, a, w in CAR)
+    fills = CAR_FILLS if ground else CAR_FILLS.replace(CAR_FILLS[CAR_FILLS.index('<path d="M-8'):CAR_FILLS.index('<path d="M9')], "")
+    return (f'<g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">{strokes}</g>'
+            f'<g fill="currentColor">{fills}</g>')
+
+
+# ---------- type ----------
+VALOR_SIZE = 132
+valor_d, valor_w, valor_top = outline(cormorant, "Valor", VALOR_SIZE)
+LIMO_SIZE, LIMO_TRACK = 13, 0.75
+limo_d, limo_w, limo_top = outline(inter, "LIMO", LIMO_SIZE, LIMO_TRACK)
+limo_cap = -limo_top
+
+
+def limo_with_rules(cx, cap_y, rule_len, gap, rule_w):
+    """LIMO centred on cx with its cap top at cap_y, and a gold rule either side."""
+    lx = cx - limo_w / 2
+    base = cap_y + limo_cap
+    ry = cap_y + limo_cap / 2 - rule_w / 2
+    rules = (f"M{num(lx - gap - rule_len)} {num(ry)} H{num(lx - gap)} V{num(ry + rule_w)} H{num(lx - gap - rule_len)} Z "
+             f"M{num(lx + limo_w + gap)} {num(ry)} H{num(lx + limo_w + gap + rule_len)} V{num(ry + rule_w)} H{num(lx + limo_w + gap)} Z")
+    return lx, base, rules
+
+
+def lockup(kind):
+    """Returns (w, h, parts) where parts is a list of (role, svg) with role 'ink' or 'gold'."""
+    if kind == "primary":
+        # Valor, the car under it, LIMO between rules. Car 1.44 x Valor's ink width.
+        k = valor_w * 1.44 / 300
+        W = 322 * k
+        cx = W / 2
+        vx, vbase = cx - valor_w / 2, -valor_top
+        car_y = vbase + 10  # car roof (y 4.4) sits just under the baseline
+        car_x = cx - 150 * k
+        limo_cap_y = car_y + 61 * k + 26
+        lx, lbase, rules = limo_with_rules(cx, limo_cap_y, 58, 16, 1)
+        H = limo_cap_y + limo_cap + 2
+        parts = [
+            ("ink", f'<path transform="translate({num(vx)} {num(vbase)})" d="{valor_d}"/>'),
+            ("gold", f'<g transform="translate({num(car_x)} {num(car_y)}) scale({k:.4f})">{car_markup(1.0)}</g>'),
+            ("gold", f'<path transform="translate({num(lx)} {num(lbase)})" d="{limo_d}"/><path d="{rules}"/>'),
+        ]
+        return W, H, parts
+    if kind == "inline":
+        # For the header: Valor over a heavier car, LIMO set at the car's rear, all on one compact block.
+        k = valor_w * 1.32 / 300
+        W = 300 * k + 2
+        vbase = -valor_top
+        car_y = vbase + 8
+        car_x = -9 * k + 1
+        vx = car_x + 150 * k - valor_w / 2
+        H = car_y + 61.5 * k
+        parts = [
+            ("ink", f'<path transform="translate({num(vx)} {num(vbase)})" d="{valor_d}"/>'),
+            ("gold", f'<g transform="translate({num(car_x)} {num(car_y)}) scale({k:.4f})">{car_markup(2.4, ground=False)}</g>'),
+        ]
+        return W, H, parts
+    if kind == "car":
+        k = 1.0
+        return CAR_BOX[2], CAR_BOX[3], [("gold", f'<g transform="translate(8 0)">{car_markup(1.0)}</g>')]
+    raise ValueError(kind)
+
+
+def svg_file(kind, ink, gold, title="Valor Limo"):
+    w, h, parts = lockup(kind)
+    body = "".join(f'<g fill="{ink if r == "ink" else gold}" color="{ink if r == "ink" else gold}">{p}</g>' for r, p in parts)
+    return (f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {num(w)} {num(h)}" width="{w:.0f}" height="{h:.0f}" '
+            f'role="img" aria-label="{title}"><title>{title}</title>{body}</svg>\n')
+
+
+# App icon: ink rounded square, an italic V in paper over the gold car.
+v_d, v_w, v_top = outline(cormorant, "V", 60)
+ik = 80 / 300
+icon = (f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="100" height="100" role="img" aria-label="Valor Limo">'
+        f'<title>Valor Limo</title><rect width="100" height="100" rx="22" fill="{INK}"/>'
+        f'<path fill="{PAPER}" transform="translate({num(50 - v_w / 2 + 1.5)} {num(17 - v_top)})" d="{v_d}"/>'
+        f'<g color="{GOLD}" transform="translate({num(50 - 150 * ik)} 62) scale({ik:.4f})">{car_markup(2.4, ground=False)}</g></svg>\n')
+
+files = {
+    "valor-logo.svg": svg_file("primary", INK, GOLD),
+    "valor-logo-reversed.svg": svg_file("primary", PAPER, GOLD),
+    "valor-logo-mono.svg": svg_file("primary", INK, INK),
+    "valor-logo-inline.svg": svg_file("inline", INK, GOLD),
+    "valor-logo-inline-reversed.svg": svg_file("inline", PAPER, GOLD),
+    "valor-car.svg": svg_file("car", GOLD, GOLD, "Valor Limo car"),
+    "valor-icon.svg": icon,
 }
-# ---------- the car: front view of a sports sedan, as on the business card ----------
-# 100 x 100 box, ink spans x 4..96, y 25.5..83.5. BODY is even-odd: outline plus its cut-outs
-# (windshield, headlights, grille, lip). Mirrors, the V badge and the windshield spark are separate.
-CAR_BODY = (
-    "M33 27 C36 25.5 64 25.5 67 27 L78 43 C84 43.6 90 45 93 48 C95.5 50.5 96 55 96 60 L96 72 C96 75 94 76.5 91 76.5 "
-    "L88 76.5 L88 81 C88 82.6 86.8 83.5 85 83.5 L79 83.5 C77.2 83.5 76 82.6 76 81 L76 77.5 L24 77.5 L24 81 "
-    "C24 82.6 22.8 83.5 21 83.5 L15 83.5 C13.2 83.5 12 82.6 12 81 L12 76.5 L9 76.5 C6 76.5 4 75 4 72 L4 60 "
-    "C4 55 4.5 50.5 7 48 C10 45 16 43.6 22 43 Z "
-    "M35.5 30 C38 29 62 29 64.5 30 L72.5 41.2 C73 42 72.4 42.6 71.5 42.6 L28.5 42.6 C27.6 42.6 27 42 27.5 41.2 Z "
-    "M9 51 C15 50.2 25 51.4 33 55 L32 57.6 C24 57.8 14 56.8 9 55.4 Z "
-    "M91 51 C85 50.2 75 51.4 67 55 L68 57.6 C76 57.8 86 56.8 91 55.4 Z "
-    "M30 60.4 C30 59.6 70 59.6 70 60.4 L66 71 C65.7 71.7 34.3 71.7 34 71 Z "
-    "M10 73.4 H90 V74.7 H10 Z"
-)
-CAR_MIRRORS = ("M22 41.5 C19 39.5 13 39.5 11 41.5 C10 43.3 12 44.8 15 44.8 L21.5 44 Z "
-               "M78 41.5 C81 39.5 87 39.5 89 41.5 C90 43.3 88 44.8 85 44.8 L78.5 44 Z")
-# the V badge in the grille: the mark's V scaled into y 61.6..70.2
-_vk = 8.6 / 64
-CAR_BADGE_T = f"translate({50 - 49 * _vk:.2f} {61.6 - 18 * _vk:.2f}) scale({_vk:.4f})"
-CAR_SPARK = "M60 30.6 C60.4 33.4 61.4 34.4 64.2 34.8 C61.4 35.2 60.4 36.2 60 39 C59.6 36.2 58.6 35.2 55.8 34.8 C58.6 34.4 59.6 33.4 60 30.6 Z"
-
-
-MARK_D = " ".join(MARK.values())
-
-# ---------- wordmark ----------
-V_SIZE = 64      # VALOR cap size box
-VALOR_TRACK = 0.07
-L_SIZE = 15.5
-LIMO_TRACK = 0.0  # computed to justify LIMO under VALOR
-
-vx0, vx1 = ink_bounds(serif, "VALOR", V_SIZE, VALOR_TRACK)
-valor_w = vx1 - vx0
-cap_h = serif["OS/2"].sCapHeight * V_SIZE / serif["head"].unitsPerEm
-
-# LIMO: small, tracked, centred under VALOR between two hairlines
-L_SIZE = 12.5
-LIMO_TRACK = 0.5
-lx0, lx1 = ink_bounds(inter, "LIMO", L_SIZE, LIMO_TRACK)
-limo_w = lx1 - lx0
-l_cap = inter["OS/2"].sCapHeight * L_SIZE / inter["head"].unitsPerEm
-
-GAP = 13  # VALOR baseline to LIMO cap top
-valor_base = cap_h
-limo_base = valor_base + GAP + l_cap
-word_h = limo_base
-
-valor_d, _ = text_path(serif, "VALOR", V_SIZE, VALOR_TRACK, x0=-vx0, baseline=valor_base)
-limo_left = (valor_w - limo_w) / 2
-limo_d, _ = text_path(inter, "LIMO", L_SIZE, LIMO_TRACK, x0=limo_left - lx0, baseline=limo_base)
-RULE_GAP = 9
-rule_y = limo_base - l_cap / 2 - 0.6
-RULES = (f"M0 {rule_y:.2f} H{limo_left - RULE_GAP:.2f} V{rule_y + 1.2:.2f} H0 Z "
-         f"M{limo_left + limo_w + RULE_GAP:.2f} {rule_y:.2f} H{valor_w:.2f} V{rule_y + 1.2:.2f} H{limo_left + limo_w + RULE_GAP:.2f} Z")
-
-GOLD = "#C8A55A"
-INK = "#14161A"
-PAPER = "#FCFAF7"
-
-
-def svg(w, h, body, title):
-    return (f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {w:.1f} {h:.1f}" width="{w:.0f}" height="{h:.0f}" role="img" aria-label="{title}">'
-            f"<title>{title}</title>{body}</svg>\n")
-
-
-def mark_g(x, y, size, color):
-    k = size / 100
-    return f'<path transform="translate({x:.2f} {y:.2f}) scale({k:.4f})" fill="{color}" d="{MARK_D}"/>'
-
-
-def word_g(x, y, scale, valor_color, limo_color):
-    return (f'<g transform="translate({x:.2f} {y:.2f}) scale({scale:.4f})">'
-            f'<path fill="{valor_color}" d="{valor_d}"/><path fill="{valor_color}" d="{limo_d}"/><path fill="{limo_color}" d="{RULES}"/></g>')
-
-
 out = os.path.join(ROOT, "public", "brand")
 os.makedirs(out, exist_ok=True)
-
-# Lockups. The V body (y 18..82 of its 100 box) matches the wordmark height; the spark rises above it.
-def horizontal(text_color, limo_color, mark_color):
-    k = word_h / 64
-    top = 12 * k                      # spark sits 12 units above the V's serifs
-    mx, my = -14 * k, -18 * k + top
-    wx = (99.5 - 14) * k + 0.38 * word_h
-    w, h = wx + valor_w, word_h + top
-    return w, h, mark_g(mx, my, 100 * k, mark_color) + word_g(wx, top, 1, text_color, limo_color)
-
-
-def stacked(text_color, limo_color, mark_color):
-    k = word_h * 1.15 / 64
-    top = 12 * k
-    ink_w = (99.5 - 14) * k
-    w = max(valor_w, ink_w)
-    # centre the V body (14..84), letting the spark hang right
-    mx, my = (w - 70 * k) / 2 - 14 * k, -18 * k + top
-    wy = top + 64 * k + 0.42 * word_h
-    h = wy + word_h
-    return w, h, mark_g(mx, my, 100 * k, mark_color) + word_g((w - valor_w) / 2, wy, 1, text_color, limo_color)
-
-
-def car_g(x, y, size, color):
-    k = size / 100
-    return (f'<g transform="translate({x:.2f} {y:.2f}) scale({k:.4f})" fill="{color}">'
-            f'<path fill-rule="evenodd" d="{CAR_BODY}"/><path d="{CAR_MIRRORS}"/>'
-            f'<path transform="{CAR_BADGE_T}" d="{MARK["v"]}"/><path d="{CAR_SPARK}"/></g>')
-
-
-def stacked_car(text_color, limo_color, car_color):
-    k = valor_w * 0.82 / 92             # car ink width = 82% of VALOR
-    w = valor_w
-    cx, cy = (w - 92 * k) / 2 - 4 * k, -25.5 * k
-    car_h = 58 * k
-    wy = car_h + 0.36 * word_h
-    return w, wy + word_h, car_g(cx, cy, 100 * k, car_color) + word_g(0, wy, 1, text_color, limo_color)
-
-
-files = {}
-w, h, b = horizontal(INK, GOLD, GOLD); files["valor-logo.svg"] = svg(w, h, b, "Valor Limo")
-w, h, b = horizontal(PAPER, GOLD, GOLD); files["valor-logo-reversed.svg"] = svg(w, h, b, "Valor Limo")
-w, h, b = horizontal(INK, INK, INK); files["valor-logo-mono.svg"] = svg(w, h, b, "Valor Limo")
-w, h, b = stacked_car(INK, GOLD, GOLD); files["valor-logo-stacked.svg"] = svg(w, h, b, "Valor Limo")
-w, h, b = stacked_car(PAPER, GOLD, GOLD); files["valor-logo-stacked-reversed.svg"] = svg(w, h, b, "Valor Limo")
-files["valor-car.svg"] = svg(100, 66, car_g(0, -21.5, 100, GOLD), "Valor Limo car")
-files["valor-mark.svg"] = svg(100, 100, f'<path fill="{GOLD}" d="{MARK_D}"/>', "Valor Limo mark")
-# App icon: the car on ink, between the converging light lines from the card
-icon = (f'<rect width="100" height="100" rx="22" fill="{INK}"/>'
-        f'<g stroke="{GOLD}" stroke-width="1.1" stroke-linecap="round" fill="none" opacity="0.6">'
-        f'<path d="M3 37 L17 44.5"/><path d="M3 71 L17 63"/><path d="M97 37 L83 44.5"/><path d="M97 71 L83 63"/></g>'
-        + car_g(17, 14.03, 66, GOLD))
-files["valor-icon.svg"] = svg(100, 100, icon, "Valor Limo")
-
+for name in os.listdir(out):
+    if name.endswith(".svg") and name not in files:
+        os.remove(os.path.join(out, name))
 for name, content in files.items():
     with open(os.path.join(out, name), "w") as f:
         f.write(content)
-
 with open(os.path.join(ROOT, "app", "icon.svg"), "w") as f:
-    f.write(files["valor-icon.svg"])
+    f.write(icon)
 
-# JS module for the inline React logo (colours via currentColor / CSS vars)
-mod = {
-    "mark": MARK_D,
-    "valor": valor_d,
-    "limo": limo_d,
-    "rules": RULES,
-    "carBody": CAR_BODY,
-    "carMirrors": CAR_MIRRORS,
-    "carBadgeTransform": CAR_BADGE_T,
-    "carSpark": CAR_SPARK,
-    "markV": MARK["v"],
-    "wordWidth": round(valor_w, 2),
-    "wordHeight": round(word_h, 2),
-}
+# JS module for components/Logo.jsx: each lockup's box and parts; colours come from CSS at render time.
+mod = {}
+for kind in ("primary", "inline", "car"):
+    w, h, parts = lockup(kind)
+    mod[kind] = {"w": round(w, 2), "h": round(h, 2), "parts": [{"role": r, "svg": p} for r, p in parts]}
 with open(os.path.join(ROOT, "lib", "logo-paths.js"), "w") as f:
-    f.write("// Generated outlines for the Valor Limo logo (Instrument Serif + Inter 500). Do not edit by hand.\n")
-    f.write("// Regenerate from the brand source if the logo changes; see /brand for usage rules.\n")
-    for k, v in mod.items():
-        f.write(f"export const {k.upper() if k in ('mark','valor','limo','rules') else k} = {json.dumps(v)};\n")
+    f.write("// Generated by scripts/build-logo.py. Do not edit by hand; see /brand for usage.\n")
+    f.write(f"export const LOCKUPS = {json.dumps(mod)};\n")
 
-print(json.dumps({"valor_w": valor_w, "word_h": word_h, "limo_track": LIMO_TRACK, "files": list(files)}))
+print(json.dumps({k: [v["w"], v["h"]] for k, v in mod.items()}))
