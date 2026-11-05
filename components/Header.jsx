@@ -24,7 +24,7 @@ export default function Header() {
     <header className="header">
       <div className="container header-row">
         <Link className="brand-link" href="/" aria-label={`${SITE.name} home`}>
-          <Logo layout="compact" id="vl-head" title="" className="header-logo" />
+          <Logo layout="header" id="vl-head" title="" className="header-logo" />
         </Link>
         <nav className="header-nav" aria-label="Primary">
           {NAV.map((n) => (

@@ -26,13 +26,13 @@ const COLOURS = [
 ];
 
 const MOTION = [
-  ["Draw", "One 10 s cycle. A spark of light draws the silver line as it travels: the road, up into the roofline and back down, in 3.5 s."],
-  ["Details", "The wheels, windows, doors and body lines draw in behind the spark, from 1.6 s to 5 s."],
+  ["Draw", "Once, in about 4 s. A spark of light draws the silver line as it travels: the road, up into the roofline and back down, in 2.3 s."],
+  ["Details", "The wheels, windows, doors and body lines draw in behind the spark, from 1 s to 3.2 s."],
   ["Headlight", "Switches on as the spark passes it, then pulses gently."],
-  ["Wordmark", "“Valor” fades up as the car finishes, then LIMO. A gloss sweeps the chrome and the car at 5.2 s."],
-  ["Rest", "The finished logo holds for about 4 s, fades, and draws again."],
-  ["Header", "The full logo sits top left and draws itself on every page load, then rests and redraws."],
-  ["On scroll", "Each logo starts drawing when it comes into view and pauses when it leaves. Sections and photos rise in as you scroll."],
+  ["Wordmark", "“Valor” fades up as the car finishes, then LIMO. Then the logo stays."],
+  ["Gloss", "Once drawn, the logo never redraws. Only a gloss sweeps the chrome and the car, every 5 s, on a loop."],
+  ["Header", "The full logo sits top left, with “Valor” at twice the size. It draws once when you arrive, not on every page."],
+  ["On scroll", "Each logo draws the first time it comes into view. Sections and photos rise in as you scroll."],
   ["Monogram", "The spark circles the ring once every 5 s."],
   ["Reduced motion", "All motion stops for visitors who ask for less. The still logo is what they see."],
 ];
@@ -43,7 +43,7 @@ const DONTS = [
   "Retype “Valor” in another font, or set it upright. Use the files.",
   "Use the chrome gradient on anything but the wordmark.",
   "Put the logo on a busy photo without a dark band behind it.",
-  "Speed the animation up, or loop the spark without its rest.",
+  "Replay the drawing on a loop. It draws once; only the gloss repeats.",
 ];
 
 export default function Brand() {
@@ -76,7 +76,7 @@ export default function Brand() {
             <p className="brand-text">
               <strong>Valor</strong> in Cormorant Garamond Italic, filled with chrome. Under it, <strong>the silver
               line</strong>: the road rising into a long sedan in side view, with wheels, windows and a headlight, then
-              back down to the road. Below, <strong>LIMO</strong> in Manrope between two steel rules. Use the primary
+              back down to the road. Below, <strong>LIMO</strong> in DM Sans between two steel rules. Use the primary
               logo where there is room, the horizontal one in headers, and the monogram where only a square fits.
             </p>
             <ul className="logo-grid">
@@ -132,7 +132,7 @@ export default function Brand() {
               <div><dt>Primary, smallest</dt><dd>160 px wide on screen · 40 mm in print</dd></div>
               <div><dt>Horizontal, smallest</dt><dd>110 px wide · 28 mm</dd></div>
               <div><dt>Monogram, smallest</dt><dd>16 px (the favicon) · 8 mm</dd></div>
-              <div><dt>Header on this site</dt><dd>The primary logo, cropped to the car, top left: 78 px tall, 54 px on phones</dd></div>
+              <div><dt>Header on this site</dt><dd>The header logo, top left: “Valor” at twice the size over the car, 92 px tall, 64 px on phones</dd></div>
             </dl>
           </div>
         </div>
@@ -177,7 +177,7 @@ export default function Brand() {
             </div>
             <div className="type-card">
               <p className="type-specimen">Aa 123</p>
-              <p className="logo-name">Manrope</p>
+              <p className="logo-name">DM Sans</p>
               <p className="logo-use">Everything else: text, forms, buttons, phone numbers and the spaced LIMO. Regular 400 to SemiBold 600.</p>
               <p className="type-sample">Pickup, drop-off, date, time, passengers and bags. We reply with one written total.</p>
             </div>

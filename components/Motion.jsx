@@ -13,9 +13,9 @@ const REVEAL = [
 ].join(",");
 
 /**
- * Site-wide motion. Sections rise in as they scroll into view, and every animated logo restarts its
- * drawing when it comes into view and pauses when it leaves, so the footer and closing band draw
- * themselves in front of you instead of mid-cycle. Does nothing under reduced motion.
+ * Site-wide motion. Sections rise in as they scroll into view, and every animated logo draws itself once
+ * when it first comes into view (the footer and closing band draw in front of you), then stays, with
+ * only the gloss looping. Does nothing under reduced motion.
  */
 export default function Motion() {
   const pathname = usePathname();
@@ -44,21 +44,25 @@ export default function Motion() {
     );
     items.forEach((el) => reveal.observe(el));
 
-    const logos = [...document.querySelectorAll(".logo svg")].filter((svg) => svg.querySelector(".vl-trace"));
-    const restart = (svg) => {
+    // Each logo draws once, the first time it comes into view, then stays drawn (only its gloss loops).
+    // The header logo persists across pages, so it is marked and never replayed.
+    const logos = [...document.querySelectorAll(".logo svg")].filter((svg) => svg.querySelector(".vl-trace") && !svg.dataset.drawn);
+    const hold = (svg) => {
+      svg.pauseAnimations?.();
+      svg.setCurrentTime?.(0);
+      svg.getAnimations?.({ subtree: true }).forEach((a) => { a.pause(); a.currentTime = 0; });
+    };
+    const draw = (svg) => {
+      svg.dataset.drawn = "1";
       svg.setCurrentTime?.(0);
       svg.unpauseAnimations?.();
       svg.getAnimations?.({ subtree: true }).forEach((a) => { a.currentTime = 0; a.play(); });
     };
-    const pause = (svg) => {
-      svg.pauseAnimations?.();
-      svg.getAnimations?.({ subtree: true }).forEach((a) => a.pause());
-    };
     const seen = new IntersectionObserver(
-      (entries) => entries.forEach((e) => (e.isIntersecting ? restart(e.target) : pause(e.target))),
+      (entries) => entries.forEach((e) => { if (e.isIntersecting) { draw(e.target); seen.unobserve(e.target); } }),
       { threshold: 0.35 },
     );
-    logos.forEach((svg) => seen.observe(svg));
+    logos.forEach((svg) => { if (svg.getBoundingClientRect().top > fold) hold(svg); seen.observe(svg); });
 
     return () => {
       reveal.disconnect();

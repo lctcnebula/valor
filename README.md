@@ -38,7 +38,7 @@ hours, cancellation and no-show policy, data retention period, and the domain. A
 ## Design
 
 Dark and quiet: onyx pages, platinum text, silver detail, and one chrome-white "Request a ride" button. Headings
-are set in Cormorant Garamond Italic, text in Manrope. Tokens are in `app/tokens.css`.
+are set in Cormorant Garamond Italic, text in DM Sans. Tokens are in `app/tokens.css`.
 
 - **Header and hero:** the animated logo sits top left in the header; the home hero is a full-width night photo with the headline and a glass request card.
 - **Motion:** `components/Motion.jsx` raises sections into view as you scroll and restarts each logo's drawing when it
@@ -56,8 +56,8 @@ but if they don't offer it, remove the sign request from `components/Forms.jsx`.
 
 Silver on onyx, no gold. Guidelines live at `/brand` (linked in the footer, not indexed). The logo is "Valor" in
 chrome Cormorant Garamond Italic over a single silver line that rises from the road into a sedan in side view, with
-LIMO (Manrope) between two steel rules. On screen the light draws it: a spark traces the line, the car's details
-draw in behind it, the headlight switches on, "Valor" fades up and a gloss sweeps the chrome, then it rests and redraws. Reduced motion turns it all off.
+LIMO (DM Sans) between two steel rules. On screen the light draws it: a spark traces the line, the car's details
+draw in behind it, the headlight switches on, "Valor" fades up and it draws once and stays; only a gloss keeps sweeping the chrome, every 5 s. Body text is DM Sans. Reduced motion turns it all off.
 
 - Markup: `lib/logo-svg.mjs` (layouts: stacked, horizontal, car; dark or light; animated or still; plus the monogram).
 - In code: `components/Logo.jsx` (`<Logo id="unique" layout="..." />`, `<Monogram />`). Each instance needs a unique `id`.
