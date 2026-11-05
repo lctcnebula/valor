@@ -40,7 +40,7 @@ hours, cancellation and no-show policy, data retention period, and the domain. A
 Dark and quiet: onyx pages, platinum text, silver detail, and one chrome-white "Request a ride" button. Headings
 are set in Cormorant Garamond Italic, text in Manrope. Tokens are in `app/tokens.css`.
 
-- **Showpiece:** the animated logo on onyx at the top of the home page.
+- **Header and hero:** the animated logo sits top left in the header; the home hero is a full-width night photo with the headline and a glass request card.
 - **Motion:** `components/Motion.jsx` raises sections into view as you scroll and restarts each logo's drawing when it
   comes on screen (paused off screen). The hero, page heads and header rise in on load; buttons catch a gloss. All
   of it turns off under reduced motion.

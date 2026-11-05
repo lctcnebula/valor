@@ -10,7 +10,7 @@ export const metadata = {
 const LOGOS = [
   { file: "valor-logo.svg", name: "Primary, animated", use: "Silver on onyx, with the spark and gloss. The website and anything on screen.", bg: "ink", art: <Logo id="t-primary" /> },
   { file: "valor-logo-light.svg", name: "Primary, on light", use: "Graphite on white or silver stock. Print, documents, light pages. Never animated.", bg: "light", art: <Logo id="t-light" theme="light" animated={false} /> },
-  { file: "valor-logo-horizontal.svg", name: "Horizontal", use: "Valor and LIMO on one line. Website header, email signature, the quote sheet.", bg: "ink", art: <Logo id="t-horiz" layout="horizontal" /> },
+  { file: "valor-logo-horizontal.svg", name: "Horizontal", use: "Valor and LIMO on one line. Email signature, the quote sheet, anywhere short and wide.", bg: "ink", art: <Logo id="t-horiz" layout="horizontal" /> },
   { file: "valor-car.svg", name: "The silver line", use: "The car on its own, as a detail: the close of a page, a receipt, a sign.", bg: "ink", art: <Logo id="t-car" layout="car" title="" /> },
   { file: "valor-monogram.svg", name: "Monogram", use: "The V over the roofline in a ring. App icon, favicon, social avatar.", bg: "ink", art: <Monogram id="t-mono" className="tile-mark" /> },
   { file: "valor-logo-static.svg", name: "Primary, still", use: "The primary logo without motion. Video, slides, anywhere SVG animation won’t play.", bg: "ink", art: <Logo id="t-static" animated={false} /> },
@@ -31,7 +31,7 @@ const MOTION = [
   ["Headlight", "Switches on as the spark passes it, then pulses gently."],
   ["Wordmark", "“Valor” fades up as the car finishes, then LIMO. A gloss sweeps the chrome and the car at 5.2 s."],
   ["Rest", "The finished logo holds for about 4 s, fades, and draws again."],
-  ["Header", "The spark draws a silver underline under “Valor LIMO” each cycle; the name itself never fades."],
+  ["Header", "The full logo sits top left and draws itself on every page load, then rests and redraws."],
   ["On scroll", "Each logo starts drawing when it comes into view and pauses when it leaves. Sections and photos rise in as you scroll."],
   ["Monogram", "The spark circles the ring once every 5 s."],
   ["Reduced motion", "All motion stops for visitors who ask for less. The still logo is what they see."],
@@ -132,7 +132,7 @@ export default function Brand() {
               <div><dt>Primary, smallest</dt><dd>160 px wide on screen · 40 mm in print</dd></div>
               <div><dt>Horizontal, smallest</dt><dd>110 px wide · 28 mm</dd></div>
               <div><dt>Monogram, smallest</dt><dd>16 px (the favicon) · 8 mm</dd></div>
-              <div><dt>Header on this site</dt><dd>Horizontal, 48 px tall, 40 px on phones</dd></div>
+              <div><dt>Header on this site</dt><dd>The primary logo, cropped to the car, top left: 78 px tall, 54 px on phones</dd></div>
             </dl>
           </div>
         </div>

@@ -13,33 +13,36 @@ const TRIP_LINES = ["Pickup", "Drop-off", "Date and time", "Vehicle", "Passenger
 export default function Home() {
   return (
     <>
-      <section className="showpiece" aria-label={SITE.name}>
-        <div className="container showpiece-inner">
-          <Logo id="vl-hero" className="showpiece-logo" />
-          <p className="showpiece-tag">Chicagoland and the suburbs</p>
-        </div>
-      </section>
-
-      <section className="stripe hero">
-        <div className="container hero-grid">
+      <section className="hero" aria-labelledby="hero-head">
+        <Photo photo="lakeShore" ratio={null} className="hero-bg" sizes="100vw" priority />
+        <div className="container hero-inner">
           <div className="hero-copy">
-            <h1>Your total, in writing, before the ride.</h1>
-            <p className="lead">Chauffeured black cars to O’Hare, Midway and across Chicagoland.</p>
-            {/* A plain GET form: it works with scripting off and carries the trip into /reserve. */}
-            <form className="hero-form" action={RESERVE_HREF} method="get">
-              <input type="hidden" name="type" value="airport" />
-              <label className="hero-field">
-                <span>Pickup</span>
-                <input name="pickup" placeholder="Address, or ORD / MDW" autoComplete="street-address" />
-              </label>
-              <label className="hero-field">
-                <span>Drop-off</span>
-                <input name="dropoff" placeholder="Address, or the airport" />
-              </label>
-              <button className="btn btn-primary" type="submit">Request a ride</button>
-            </form>
+            <p className="hero-kicker">Chauffeured black cars · Chicagoland and the suburbs</p>
+            <h1 id="hero-head">Your total, in writing, before the ride.</h1>
+            <p className="lead">O’Hare, Midway, downtown and the suburbs. Send the trip, and we email one written total.</p>
           </div>
-          <Photo photo="lakeShore" ratio="4 / 5" className="hero-photo" sizes="(max-width: 60rem) 100vw, 45vw" priority />
+          {/* A plain GET form: it works with scripting off and carries the trip into /reserve. */}
+          <form className="hero-form" action={RESERVE_HREF} method="get" aria-label="Start a ride request">
+            <input type="hidden" name="type" value="airport" />
+            <p className="hero-form-title">Where to?</p>
+            <label className="hero-field">
+              <span>Pickup</span>
+              <input name="pickup" placeholder="Address, or ORD / MDW" autoComplete="street-address" />
+            </label>
+            <label className="hero-field">
+              <span>Drop-off</span>
+              <input name="dropoff" placeholder="Address, or the airport" />
+            </label>
+            <button className="btn btn-primary" type="submit">Request a ride</button>
+            <p className="hero-form-note">Sending this books nothing. We reply with a written total.</p>
+          </form>
+        </div>
+        <div className="container">
+          <ol className="hero-steps" aria-label="How it works">
+          <li><span>01</span>Send the trip</li>
+          <li><span>02</span>Get one written total</li>
+          <li><span>03</span>Accept, and it’s booked</li>
+          </ol>
         </div>
       </section>
 
