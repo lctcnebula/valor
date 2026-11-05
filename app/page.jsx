@@ -122,7 +122,10 @@ export default function Home() {
 
       <section className="stripe close" aria-labelledby="close-head">
         <div className="container close-grid">
-          <h2 id="close-head">Send the trip. We send the total.</h2>
+          <div>
+            <Logo variant="car" className="close-car" title="" />
+            <h2 id="close-head">Send the trip. We send the total.</h2>
+          </div>
           <div className="close-side">
             <Link className="btn btn-primary" href={RESERVE_HREF}>Request a ride</Link>
             <dl className="close-contact">

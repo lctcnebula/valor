@@ -250,7 +250,7 @@ input:disabled, textarea:disabled { background: var(--color-paper-2); color: var
 .brand-kicker { font-size: var(--text-sm); color: var(--color-muted); margin-bottom: var(--space-lg); letter-spacing: 0.02em; }
 .brand-hero { background: var(--color-ink); color: var(--color-paper); }
 .brand-hero-inner { display: grid; place-items: center; min-height: min(56svh, 520px); padding-block: var(--space-3xl); }
-.brand-hero .logo.brand-hero-logo { height: clamp(90px, 14vw, 180px); color: var(--color-paper); }
+.brand-hero-badge { height: clamp(180px, 26vw, 320px); width: auto; }
 .brand-grid { display: grid; grid-template-columns: minmax(0, 3fr) minmax(0, 9fr); gap: var(--gap-columns); align-items: start; }
 .brand-side { position: sticky; top: 104px; }
 .brand-num { font: italic 400 var(--text-xl)/1 var(--font-display); color: var(--color-gold-deep); margin-bottom: var(--space-xs); }
@@ -265,6 +265,9 @@ input:disabled, textarea:disabled { background: var(--color-paper-2); color: var
 .logo-tile img { max-height: 46%; max-width: 70%; width: auto; }
 .logo-tile img[src*="stacked"] { max-height: 74%; }
 .logo-tile img[src$="mark.svg"] { max-height: 60%; }
+.logo-tile img[src$="icon.svg"] { max-height: 70%; }
+.logo-tile img[src$="car.svg"] { max-height: 52%; }
+.close-car { height: 52px; margin-bottom: var(--space-xl); }
 .logo-meta { display: flex; justify-content: space-between; align-items: start; gap: var(--space-md); margin-top: var(--space-sm); }
 .logo-name { font-weight: 500; }
 .logo-use { font-size: var(--text-sm); color: var(--color-muted); max-width: 46ch; }

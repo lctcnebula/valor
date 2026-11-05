@@ -10,8 +10,10 @@ export const metadata = {
 const LOGOS = [
   { file: "valor-logo.svg", name: "Primary", use: "The default. On paper and light backgrounds.", bg: "paper" },
   { file: "valor-logo-reversed.svg", name: "Reversed", use: "On black: cars, signage, the business card.", bg: "ink" },
-  { file: "valor-logo-stacked.svg", name: "Stacked", use: "Square spaces: social avatars, the door of a car.", bg: "paper" },
-  { file: "valor-logo-stacked-reversed.svg", name: "Stacked, reversed", use: "Square spaces on black.", bg: "ink" },
+  { file: "valor-logo-stacked.svg", name: "Badge", use: "The car over the name. Square spaces: social, the car door, signs.", bg: "paper" },
+  { file: "valor-logo-stacked-reversed.svg", name: "Badge, reversed", use: "The badge on black: the business card, the arrivals sign.", bg: "ink" },
+  { file: "valor-icon.svg", name: "App icon", use: "The car between the card’s light lines. Favicon, phone home screen, profile pictures.", bg: "paper" },
+  { file: "valor-car.svg", name: "The car", use: "On its own, as a detail: the close of a page, a receipt, an email footer.", bg: "ink" },
   { file: "valor-logo-mono.svg", name: "One colour", use: "Fax, stamps, embossing, anywhere gold can’t print.", bg: "paper" },
   { file: "valor-mark.svg", name: "The V", use: "On its own only once the name is already on the page.", bg: "ink" },
 ];
@@ -49,7 +51,7 @@ export default function Brand() {
 
       <section className="brand-hero" aria-label="The logo">
         <div className="container brand-hero-inner">
-          <Logo className="brand-hero-logo" />
+          <img className="brand-hero-badge" src="/brand/valor-logo-stacked-reversed.svg" alt="Valor Limo badge: the gold car over the name" />
         </div>
       </section>
 
@@ -61,9 +63,11 @@ export default function Brand() {
           </div>
           <div className="brand-body">
             <p className="brand-text">
-              A high-contrast serif <strong>V</strong> (a thick stroke and a hairline, like the lettering on the card) with a
-              four-point spark: the shine on the car. Beside it, <strong>VALOR</strong> in Instrument Serif, and{" "}
-              <strong>LIMO</strong> in Inter, spaced between two gold rules.
+              Two marks from the business card. <strong>The car</strong>: a front-on sports sedan in gold, the Valor V on
+              its grille and the card’s spark on the windshield. <strong>The V</strong>: a high-contrast serif, a thick
+              stroke and a hairline, with the same spark. With them, <strong>VALOR</strong> in Instrument Serif and{" "}
+              <strong>LIMO</strong> in Inter between two gold rules. Use the car where there is room (the badge, the
+              icon); use the V where it has to be small and on one line (the site header).
             </p>
             <ul className="logo-grid">
               {LOGOS.map((l) => (
@@ -101,7 +105,8 @@ export default function Brand() {
             <dl className="spec-list">
               <div><dt>Primary, smallest</dt><dd>120 px wide on screen · 30 mm in print</dd></div>
               <div><dt>Stacked, smallest</dt><dd>72 px wide · 18 mm</dd></div>
-              <div><dt>The V, smallest</dt><dd>16 px (the favicon) · 6 mm</dd></div>
+              <div><dt>App icon, smallest</dt><dd>16 px (the favicon) · 6 mm</dd></div>
+              <div><dt>The car alone, smallest</dt><dd>32 px wide · 10 mm</dd></div>
               <div><dt>Header on this site</dt><dd>40 px tall, 34 px on phones</dd></div>
             </dl>
           </div>

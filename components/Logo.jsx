@@ -1,4 +1,4 @@
-import { LIMO, MARK, RULES, VALOR, wordHeight, wordWidth } from "@/lib/logo-paths";
+import { LIMO, MARK, RULES, VALOR, carBadgeTransform, carBody, carMirrors, carSpark, markV, wordHeight, wordWidth } from "@/lib/logo-paths";
 
 // Geometry shared with scripts/build-logo.py: the V body (y 18..82 of its 100 box) matches the
 // wordmark height, and the spark rises 12 units above it.
@@ -14,6 +14,19 @@ const H = wordHeight + top;
  */
 export default function Logo({ variant = "horizontal", mono = false, title = "Valor Limo", className = "", height }) {
   const gold = mono ? "currentColor" : "var(--color-gold)";
+  if (variant === "car") {
+    // The car alone (ink box x 4..96, y 25.5..83.5), as on the business card.
+    return (
+      <svg className={`logo logo-car ${className}`} viewBox="4 25.5 92 58" height={height} {...(title ? { role: "img", "aria-label": title } : { "aria-hidden": true })}>
+        <g fill={gold}>
+          <path fillRule="evenodd" d={carBody} />
+          <path d={carMirrors} />
+          <path transform={carBadgeTransform} d={markV} />
+          <path d={carSpark} />
+        </g>
+      </svg>
+    );
+  }
   if (variant === "mark") {
     return (
       <svg className={`logo logo-mark ${className}`} viewBox="0 0 100 100" height={height} role="img" aria-label={title}>

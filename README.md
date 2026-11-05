@@ -54,7 +54,9 @@ Logo and guidelines live at `/brand` (linked in the footer, not indexed). The lo
 with a four-point spark, beside VALOR (Instrument Serif) and LIMO (Inter) between two gold rules. Gold `#C8A55A`
 comes from the phone number on Valor's business card.
 
-- Logo files: `public/brand/*.svg` (primary, reversed, stacked, one colour, the V, app icon). Favicon: `app/icon.svg`.
+- Two marks from the business card: the gold car (front view, V on the grille, spark on the windshield) for the badge
+  and app icon, and the serif V for one-line uses like the header.
+- Logo files: `public/brand/*.svg` (primary, reversed, badge, app icon, the car, one colour, the V). Favicon: `app/icon.svg`, `app/apple-icon.png`.
 - In code: `components/Logo.jsx`, drawing outlines from `lib/logo-paths.js`.
 - To change the logo, edit `scripts/build-logo.py` and rerun it (instructions at the top); it rewrites all of the above.
 
