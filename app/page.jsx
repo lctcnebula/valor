@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { FLEET, QUOTE_LINES, RESERVE_HREF, ROUTES, SERVICES, SITE } from "@/lib/content";
 import { Fill, Photo } from "@/components/Bits";
+import Logo from "@/components/Logo";
 
 const routeHref = (r) =>
   r.type === "hourly"
@@ -47,7 +48,7 @@ export default function Home() {
           </div>
           <article className="sheet" aria-label="Sample quote">
             <header className="sheet-head">
-              <span className="sheet-mark">Valor Limo</span>
+              <Logo className="sheet-logo" />
               <span>Quote, sample</span>
             </header>
             <p className="sheet-for">Prepared for <strong>You</strong></p>

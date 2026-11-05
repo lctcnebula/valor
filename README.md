@@ -27,14 +27,13 @@ are included.
 ## Before launch: facts to fill in
 
 Everything the brief didn't give is `null` in `SITE` (`lib/content.js`) and shows as a dashed slot on the page:
-phone, email, hours, cancellation and no-show policy, data retention period, and the domain. Also confirm:
+hours, cancellation and no-show policy, data retention period, and the domain. Also confirm:
 
 - **Photos.** Swap the Escalade and Town Car for Valor's own cars (`PHOTOS` in `lib/content.js`). The group van
   frame on `/fleet` is empty until there is a photo.
 - **Fleet.** Which vehicles Valor runs, models and capacities (brief § 7), then fill in `FLEET`.
 - **Prices.** None are shown. If Valor approves "starting at" prices, add them with the service area,
   vehicle and minimum-hour qualifications the brief asks for (§ 6).
-- **Wordmark.** Set in type for now; swap in the logo when there is one.
 
 ## Design
 
@@ -48,6 +47,16 @@ Quiet and simple: warm paper white, a soft stone hero, near-black ink, and nothi
 
 **Confirm with Valor:** whether they offer a name sign at arrivals. The site only lets a customer ask for one,
 but if they don't offer it, remove the sign request from `components/Forms.jsx`.
+
+## Brand
+
+Logo and guidelines live at `/brand` (linked in the footer, not indexed). The logo is a high-contrast serif V
+with a four-point spark, beside VALOR (Instrument Serif) and LIMO (Inter) between two gold rules. Gold `#C8A55A`
+comes from the phone number on Valor's business card.
+
+- Logo files: `public/brand/*.svg` (primary, reversed, stacked, one colour, the V, app icon). Favicon: `app/icon.svg`.
+- In code: `components/Logo.jsx`, drawing outlines from `lib/logo-paths.js`.
+- To change the logo, edit `scripts/build-logo.py` and rerun it (instructions at the top); it rewrites all of the above.
 
 ## Run
 

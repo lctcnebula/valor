@@ -23,7 +23,8 @@ export default function Contact() {
             <div><dt>Phone</dt><dd><Fill value={SITE.phone && <a href={SITE.phoneHref}>{SITE.phone}</a>}>to confirm</Fill></dd></div>
             <div><dt>Email</dt><dd><Fill value={SITE.email && <a href={`mailto:${SITE.email}`}>{SITE.email}</a>}>to confirm</Fill></dd></div>
             <div><dt>Hours</dt><dd><Fill value={SITE.hours}>to confirm</Fill></dd></div>
-            <div><dt>Area</dt><dd>{SITE.area}, O’Hare and Midway</dd></div>
+            <div><dt>Area</dt><dd>{SITE.areaLong}, O’Hare and Midway</dd></div>
+            <div><dt>Your chauffeurs</dt><dd>{SITE.team}</dd></div>
           </dl>
         </div>
       </section>

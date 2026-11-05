@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { BUILDER, NAV, PHOTOS, RESERVE_HREF, SITE } from "@/lib/content";
+import Logo from "./Logo";
 
 const credits = Object.values(PHOTOS).map((p) => p.credit);
 
@@ -8,8 +9,8 @@ export default function Footer() {
     <footer className="footer">
       <div className="container footer-top">
         <div className="footer-brand">
-          <p className="wordmark wordmark-lg">Valor<span>Limo</span></p>
-          <p>Chauffeured black car service across {SITE.area}.</p>
+          <Logo className="logo-lg" />
+          <p>Chauffeured black car service across {SITE.areaLong}.</p>
         </div>
         <nav className="footer-links" aria-label="Services">
           <p className="footer-head">Services</p>
@@ -29,6 +30,7 @@ export default function Footer() {
         <nav aria-label="Legal" className="footer-legal">
           <Link href="/privacy">Privacy</Link>
           <Link href="/terms">Terms</Link>
+          <Link href="/brand">Brand</Link>
         </nav>
         <p>
           Photographs:{" "}

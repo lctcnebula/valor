@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { NAV, RESERVE_HREF, SITE } from "@/lib/content";
+import Logo from "./Logo";
 
 export default function Header() {
   const pathname = usePathname();
@@ -22,8 +23,8 @@ export default function Header() {
   return (
     <header className="header">
       <div className="container header-row">
-        <Link className="wordmark" href="/" aria-label={`${SITE.name} home`}>
-          Valor<span>Limo</span>
+        <Link className="brand-link" href="/" aria-label={`${SITE.name} home`}>
+          <Logo title={`${SITE.name} home`} />
         </Link>
         <nav className="header-nav" aria-label="Primary">
           {NAV.map((n) => (
@@ -31,6 +32,7 @@ export default function Header() {
           ))}
         </nav>
         <div className="header-actions">
+          <a className="header-phone" href={SITE.phoneHref}>{SITE.phone}</a>
           <Link className="btn btn-primary btn-sm" href={RESERVE_HREF}>Reserve</Link>
           <button
             className="menu-btn"
