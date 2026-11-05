@@ -66,8 +66,8 @@ export default function Brand() {
               Two marks from the business card. <strong>The car</strong>: a front-on sports sedan in gold, the Valor V on
               its grille and the card’s spark on the windshield. <strong>The V</strong>: a high-contrast serif, a thick
               stroke and a hairline, with the same spark. With them, <strong>VALOR</strong> in Instrument Serif and{" "}
-              <strong>LIMO</strong> in Inter between two gold rules. Use the car where there is room (the badge, the
-              icon); use the V where it has to be small and on one line (the site header).
+              <strong>LIMO</strong> in Inter between two gold rules. The car leads: in the site header, the badge
+              and the app icon. The V is the fallback where the car can’t hold its detail (stamps, embossing, tiny print).
             </p>
             <ul className="logo-grid">
               {LOGOS.map((l) => (

@@ -34,6 +34,27 @@ export default function Logo({ variant = "horizontal", mono = false, title = "Va
       </svg>
     );
   }
+  if (variant === "car-horizontal") {
+    // The car beside the wordmark: car ink (92 x 58) scaled to 90% of the wordmark height, centred.
+    const ck = (wordHeight * 0.9) / 58;
+    const cy = (wordHeight - 58 * ck) / 2 - 25.5 * ck;
+    const cwx = 92 * ck + 0.3 * wordHeight;
+    return (
+      <svg className={`logo ${className}`} viewBox={`0 0 ${(cwx + wordWidth).toFixed(1)} ${wordHeight.toFixed(1)}`} height={height} role="img" aria-label={title}>
+        <g transform={`translate(${(-4 * ck).toFixed(2)} ${cy.toFixed(2)}) scale(${ck.toFixed(4)})`} fill={gold}>
+          <path fillRule="evenodd" d={carBody} />
+          <path d={carMirrors} />
+          <path transform={carBadgeTransform} d={markV} />
+          <path d={carSpark} />
+        </g>
+        <g transform={`translate(${cwx.toFixed(2)} 0)`}>
+          <path fill="currentColor" d={VALOR} />
+          <path fill="currentColor" d={LIMO} />
+          <path fill={gold} d={RULES} />
+        </g>
+      </svg>
+    );
+  }
   return (
     <svg className={`logo ${className}`} viewBox={`0 0 ${W.toFixed(1)} ${H.toFixed(1)}`} height={height} role="img" aria-label={title}>
       <path transform={`translate(${(-14 * k).toFixed(2)} ${(-18 * k + top).toFixed(2)}) scale(${k.toFixed(4)})`} fill={gold} d={MARK} />
