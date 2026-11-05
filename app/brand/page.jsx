@@ -31,6 +31,8 @@ const MOTION = [
   ["Headlight", "Switches on as the spark passes it, then pulses gently."],
   ["Wordmark", "“Valor” fades up as the car finishes, then LIMO. A gloss sweeps the chrome and the car at 5.2 s."],
   ["Rest", "The finished logo holds for about 4 s, fades, and draws again."],
+  ["Header", "The spark draws a silver underline under “Valor LIMO” each cycle; the name itself never fades."],
+  ["On scroll", "Each logo starts drawing when it comes into view and pauses when it leaves. Sections and photos rise in as you scroll."],
   ["Monogram", "The spark circles the ring once every 5 s."],
   ["Reduced motion", "All motion stops for visitors who ask for less. The still logo is what they see."],
 ];
@@ -130,7 +132,7 @@ export default function Brand() {
               <div><dt>Primary, smallest</dt><dd>160 px wide on screen · 40 mm in print</dd></div>
               <div><dt>Horizontal, smallest</dt><dd>110 px wide · 28 mm</dd></div>
               <div><dt>Monogram, smallest</dt><dd>16 px (the favicon) · 8 mm</dd></div>
-              <div><dt>Header on this site</dt><dd>Horizontal, 38 px tall, 32 px on phones</dd></div>
+              <div><dt>Header on this site</dt><dd>Horizontal, 48 px tall, 40 px on phones</dd></div>
             </dl>
           </div>
         </div>

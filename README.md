@@ -41,6 +41,9 @@ Dark and quiet: onyx pages, platinum text, silver detail, and one chrome-white "
 are set in Cormorant Garamond Italic, text in Manrope. Tokens are in `app/tokens.css`.
 
 - **Showpiece:** the animated logo on onyx at the top of the home page.
+- **Motion:** `components/Motion.jsx` raises sections into view as you scroll and restarts each logo's drawing when it
+  comes on screen (paused off screen). The hero, page heads and header rise in on load; buttons catch a gloss. All
+  of it turns off under reduced motion.
 - **Hero:** headline and a short pickup/drop-off form (a plain GET into `/reserve`) beside one photo of Lake Shore Drive.
 - **Home flow:** sample quote sheet (every fee as its own line, brief § 2 and § 7), common routes, services, fleet, dark close band.
 - Photographs come from Wikimedia Commons, hotlinked and credited in the footer (`PHOTOS` in `lib/content.js`).

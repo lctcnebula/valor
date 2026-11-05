@@ -81,9 +81,9 @@ input:disabled, textarea:disabled { background: var(--color-paper-2); color: var
 .brand-link { display: inline-flex; color: var(--color-ink); text-decoration: none; }
 .logo { display: block; line-height: 0; }
 .logo svg { display: block; height: 100%; width: auto; overflow: visible; }
-.logo-horizontal { height: 38px; }
+.logo-horizontal { height: 48px; }
 .logo-lg { height: 150px; }
-.sheet-logo { height: 30px; }
+.sheet-logo { height: 38px; }
 .header-phone { font-size: var(--text-sm); font-weight: 500; text-decoration: none; font-variant-numeric: tabular-nums; }
 .header-phone:hover { color: var(--color-steel); }
 .wordmark { font-family: var(--font-display); font-weight: 400; font-size: 1.75rem; letter-spacing: -0.01em; line-height: 1; text-decoration: none; color: var(--color-ink); display: inline-flex; gap: 0.25ch; }
@@ -106,7 +106,7 @@ input:disabled, textarea:disabled { background: var(--color-paper-2); color: var
   .header-actions { margin-left: auto; }
   .menu-btn { display: inline-flex; align-items: center; }
 }
-@media (max-width: 40rem) { .header-phone { display: none; } .logo-horizontal { height: 32px; } }
+@media (max-width: 40rem) { .header-phone { display: none; } .logo-horizontal { height: 40px; } }
 @media (min-width: 68.01rem) { .mobile-menu { display: none; } }
 
 /* ---------- the flag's stripes ---------- */
@@ -190,7 +190,7 @@ input:disabled, textarea:disabled { background: var(--color-paper-2); color: var
 .car { margin: 0; }
 .car figcaption { display: grid; gap: var(--space-2xs); margin-top: var(--space-md); color: var(--color-ink-2); }
 .car-name { font: 500 var(--text-3xl)/1 var(--font-display); color: var(--color-ink); }
-.frame { margin: 0; min-width: 0; width: 100%; border-radius: var(--radius-card); background: var(--color-paper-2); }
+.frame { margin: 0; min-width: 0; width: 100%; border-radius: var(--radius-card); background: var(--color-paper-2); overflow: hidden; }
 .frame-wants { position: absolute; inset: auto var(--space-lg) var(--space-lg) var(--space-lg); font-size: var(--text-sm); color: var(--color-muted); }
 
 /* close: the flag's second stripe */
@@ -408,4 +408,39 @@ input:disabled, textarea:disabled { background: var(--color-paper-2); color: var
   .route { grid-template-columns: minmax(0, 1fr); gap: var(--space-2xs); }
   .row { grid-template-columns: minmax(0, 1fr); gap: var(--space-xs); }
   .ticket div { grid-template-columns: minmax(0, 1fr); gap: 0; }
+}
+
+/* ---------- motion ---------- */
+
+/* Scroll reveal (components/Motion.jsx adds .rv below the fold, then .rv-in as each item comes into view). */
+.rv { opacity: 0; transform: translateY(26px); filter: blur(4px); }
+.rv-in { opacity: 1; transform: none; filter: none; transition: opacity 0.9s var(--ease-out) var(--rv-delay, 0ms), transform 1s var(--ease-out) var(--rv-delay, 0ms), filter 0.9s var(--ease-out) var(--rv-delay, 0ms); }
+
+/* Page entrance: the showpiece tag, the hero copy and photo, the page heads. */
+@keyframes rise { from { opacity: 0; transform: translateY(22px); filter: blur(4px); } to { opacity: 1; transform: none; filter: none; } }
+@keyframes settle { from { opacity: 0; transform: scale(1.06); } to { opacity: 1; transform: none; } }
+.showpiece-tag { animation: rise 1.2s var(--ease-out) 3.2s both; }
+.hero-copy > *, .page-head .container > * { animation: rise 1s var(--ease-out) both; }
+.hero-copy > :nth-child(2), .page-head .container > :nth-child(2) { animation-delay: 120ms; }
+.hero-copy > :nth-child(3), .page-head .container > :nth-child(3) { animation-delay: 240ms; }
+.hero-photo { animation: settle 1.6s var(--ease-out) both; }
+.header { animation: rise 0.8s var(--ease-out) both; }
+
+/* Light passing over the buttons, like the gloss on the logo. */
+.btn { position: relative; overflow: hidden; isolation: isolate; }
+.btn::after { content: ""; position: absolute; inset: -2px; z-index: -1; pointer-events: none;
+  background: linear-gradient(110deg, transparent 30%, rgb(255 255 255 / 0.55) 50%, transparent 70%); transform: translateX(-120%); }
+.btn-primary::after { animation: btn-gloss 7s var(--ease-in-out) 4s infinite; }
+.btn:hover::after { animation: btn-hover 0.9s var(--ease-out) 1; }
+@keyframes btn-gloss { 0% { transform: translateX(-120%); } 14%, 100% { transform: translateX(120%); } }
+@keyframes btn-hover { from { transform: translateX(-120%); } to { transform: translateX(120%); } }
+
+/* Photos ease in on hover; route and service rows light up. */
+.car .frame img { transition: transform 1.2s var(--ease-out); }
+.car:hover .frame img { transform: scale(1.04); }
+.route, .services li { transition: background-color var(--dur-long) var(--ease-out); }
+
+@media (prefers-reduced-motion: reduce) {
+  .rv { opacity: 1; transform: none; filter: none; }
+  .showpiece-tag, .hero-copy > *, .page-head .container > *, .hero-photo, .header, .btn::after { animation: none !important; }
 }

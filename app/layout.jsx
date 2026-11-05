@@ -1,5 +1,6 @@
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import Motion from "@/components/Motion";
 import { SITE } from "@/lib/content";
 import "./globals.css";
 
@@ -28,6 +29,7 @@ export default function RootLayout({ children }) {
         <Header />
         <main id="main">{children}</main>
         <Footer />
+        <Motion />
       </body>
     </html>
   );
