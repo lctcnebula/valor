@@ -2,12 +2,13 @@
 // like the italic of "Valor". Writes lib/car-paths.mjs. Run: node scripts/build-car.mjs
 import { writeFileSync } from "node:fs";
 
-// The car's centre line: the road rising into the rear, one sweeping roof over "Valor", down to the nose and
-// back to the road. Front is on the right. Also used as the spark's path and the draw mask.
+// The car's centre line: a stretch limo. The road rises into the rear, a long low roof runs over "Valor", and it
+// comes down over the hood and nose to the road. Front is on the right. Also the spark's path and the draw mask.
 export const LINE =
-  "M50 300 H136 C152 300 159 293 160 282 L162 258 C163 246 172 240 188 238 L232 233 C292 176 382 122 486 120 " +
-  "C586 118 650 156 700 206 C708 214 720 220 738 222 L790 230 C808 233 818 246 820 262 L821 284 C821 294 828 300 840 300 H910";
-export const WHEELS = [{ cx: 258, cy: 268, r: 29 }, { cx: 744, cy: 268, r: 29 }];
+  "M30 300 H112 C126 300 132 294 133 284 L134 244 C135 234 142 228 156 227 L206 224 C222 223 232 218 242 208 " +
+  "L268 176 C276 166 288 161 304 161 L640 158 C658 158 670 163 682 172 L722 204 C730 211 742 215 758 216 " +
+  "L818 221 C836 223 846 234 848 250 L849 284 C849 294 856 300 868 300 H930";
+export const WHEELS = [{ cx: 196, cy: 270, r: 27 }, { cx: 782, cy: 270, r: 27 }];
 
 /** Flattens M/H/L/C path data into points. */
 function flatten(d) {
@@ -67,7 +68,7 @@ function nib(pts, { wmin, wmax, pen = 20, ends = 0.1, step = 2 }) {
   return "M" + [...A, ...B.reverse()].map(([x, y]) => `${f(x)} ${f(y)}`).join("L") + "Z";
 }
 
-const body = nib(flatten(LINE), { wmin: 1, wmax: 6.4, step: 3 });
+const body = nib(flatten(LINE), { wmin: 1, wmax: 6.2, step: 3 });
 const wheels = WHEELS.map((w) => nib(arcPts(w, 215, 535), { wmin: 1, wmax: 4.6, ends: 0.18 }));
 
 if (import.meta.url === `file://${process.argv[1]}`) {

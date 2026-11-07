@@ -26,7 +26,7 @@ const COLOURS = [
 ];
 
 const MOTION = [
-  ["Draw", "Once, in about 4 s. A spark of light writes the stroke as it travels: the road, up over the roof and down over the nose, in 2.3 s."],
+  ["Draw", "Once, in about 4 s. A spark of light writes the stroke as it travels: the road, along the roof and down over the hood, in 2.3 s."],
     ["Headlight", "Switches on as the spark passes it, then pulses gently."],
   ["Wheels", "The wheels draw in behind the spark, and the road fades up under them."],
   ["Wordmark", "“Valor” fades up inside the car as the line finishes, then LIMO below it. Then the logo stays."],
@@ -40,7 +40,7 @@ const MOTION = [
 const DONTS = [
   "Add gold, or any colour. Valor is silver and black.",
   "Stretch, squash or rotate the car, or add windows or doors. The space under the roof belongs to “Valor”.",
-  "Retype “Valor” in another font, or set it upright. Use the files.",
+  "Retype “Valor” in another font, set it upright or close up its spacing. Use the files.",
   "Use the chrome gradient on anything but the wordmark.",
   "Put the logo on a busy photo without a dark band behind it.",
   "Replay the drawing on a loop. It draws once; only the gloss repeats.",
@@ -54,8 +54,8 @@ export default function Brand() {
           <p className="brand-kicker">Brand guidelines · v2 · November 2026</p>
           <h1>Valor Limo, in silver.</h1>
           <p className="lead">
-            Black car, silver light, plain words. One silver line draws a sedan, written like a pen stroke, and a spark of
-            light travels along it to the headlight. The chrome “Valor” sits under its roof and catches the same light. Silver and black only, no gold.
+            Black car, silver light, plain words. One silver line draws a stretch limo, written like a pen stroke, and a spark
+            of light travels along it to the headlight. The chrome “Valor”, letter-spaced, runs under its long roof and catches the same light. Silver and black only, no gold.
           </p>
         </div>
       </section>
@@ -75,9 +75,9 @@ export default function Brand() {
           <div className="brand-body">
             <p className="brand-text">
               <strong>The silver line</strong>: one calligraphic stroke, thick on the uprights and hairline on the
-              flats like the italic it carries. It rises from the road, sweeps one long roof over the name and comes
-              down over the nose, with two open wheels on a faint road. No windows, no doors. Under the roof,
-              <strong>Valor</strong> in Cormorant Garamond Italic, filled with chrome. Below, outside the car, <strong>LIMO</strong> in DM Sans between two steel rules. Use the primary
+              flats like the italic it carries. It rises from the road into a stretch limo, runs one long low roof over
+              the name and comes down over the hood, with two open wheels on a faint road. No windows, no doors. Under the roof,
+              <strong>Valor</strong> in Cormorant Garamond Italic with open letter spacing, filled with chrome. Below, outside the car, <strong>LIMO</strong> in DM Sans between two steel rules. Use the primary
               logo where there is room, the horizontal one in headers, and the monogram where only a square fits.
             </p>
             <ul className="logo-grid">
