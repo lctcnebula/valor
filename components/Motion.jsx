@@ -9,7 +9,8 @@ const REVEAL = [
   "main h2", "main .lead", "main .brand-text", "main .sheet", "main .sheet-notes li", "main .routes li", "main .services li",
   "main figure", "main .fleet-head a", "main .close-side", "main .logo-tile", "main .logo-meta", "main .swatches li",
   "main .type-card", "main .spec-list > div", "main .voice-list li", "main .donts li", "main .card-face", "main .faq-item",
-  "main .well", "main .row", "main .note", "main form fieldset", ".footer-top > *", ".footer-base > *",
+  "main .well", "main .row", "main .note", "main form fieldset", "main .promises li", "main .about-steps li",
+  "main .about-service-list li", "main .credits li", "main .about-copy", ".footer-top > *", ".footer-base > *",
 ].join(",");
 
 /**
@@ -40,7 +41,7 @@ export default function Motion() {
           reveal.unobserve(e.target);
         }
       },
-      { rootMargin: "0px 0px -8% 0px" },
+      { rootMargin: "0px 0px -2% 0px" },
     );
     items.forEach((el) => reveal.observe(el));
 
