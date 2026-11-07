@@ -8,7 +8,7 @@ export default function Privacy() {
   return (
     <Legal
       title="Privacy notice."
-      updated="3 November 2026"
+      updated="7 November 2026"
       sections={[
         {
           h: "What we collect",
@@ -26,6 +26,13 @@ export default function Privacy() {
           h: "Where it goes",
           p: [
             "Submissions are sent by email to the Valor Limo reservations team through our email provider. This website does not take or store card details.",
+          ],
+        },
+        {
+          h: "Autofill on the reservation form",
+          p: [
+            "“Use my location” asks your browser for your position only when you press it, and sends it to OpenStreetMap’s address lookup (Nominatim) to fill in the pickup address. We do not keep your location.",
+            "After you send a request, your name, email and mobile are saved in your own browser so “Fill in my details” can fill them next time. They stay on your device; press “Forget” on the form to remove them.",
           ],
         },
         {

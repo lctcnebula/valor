@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { Photo } from "@/components/Bits";
-import Logo from "@/components/Logo";
+import RouteQuote from "@/components/RouteQuote";
 import { RESERVE_HREF, SERVICE_NAV, SITE, STEPS } from "@/lib/content";
 
 export const metadata = {
@@ -28,7 +28,7 @@ export default function About() {
               between meetings and through the evening, and we put the full price in writing before anyone gets in the car.
             </p>
           </div>
-          <Logo id="vl-about" className="about-logo" title="" />
+          <RouteQuote />
         </div>
       </section>
 

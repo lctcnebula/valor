@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   MAX_BAGS,
   MAX_HOURS,
@@ -84,6 +84,50 @@ function focusFirstError(form) {
   setTimeout(() => form?.querySelector('[aria-invalid="true"]')?.focus(), 0);
 }
 
+const AIRPORTS = [
+  { label: "O’Hare (ORD)", value: "O’Hare International Airport (ORD)" },
+  { label: "Midway (MDW)", value: "Midway International Airport (MDW)" },
+];
+const RIDER_KEY = "valor:rider";
+
+/** One-tap fills under an address field: the airports, and optionally the rider's current location. */
+function Quick({ onPick, locate }) {
+  const [loc, setLoc] = useState({ status: "idle" });
+  async function useLocation() {
+    if (!navigator.geolocation) return setLoc({ status: "error", message: "Location isn’t available in this browser." });
+    setLoc({ status: "busy" });
+    navigator.geolocation.getCurrentPosition(
+      async ({ coords }) => {
+        const near = `Near ${coords.latitude.toFixed(5)}, ${coords.longitude.toFixed(5)}`;
+        try {
+          // OpenStreetMap's reverse geocoder turns the position into a street address.
+          const r = await fetch(`https://nominatim.openstreetmap.org/reverse?format=jsonv2&zoom=18&addressdetails=1&lat=${coords.latitude}&lon=${coords.longitude}`, { headers: { "Accept-Language": "en" } });
+          const a = (await r.json())?.address ?? {};
+          const street = [a.house_number, a.road].filter(Boolean).join(" ");
+          const town = a.city || a.town || a.village || a.suburb || "";
+          onPick([street, town, a.state].filter(Boolean).join(", ") || near);
+        } catch { onPick(near); }
+        setLoc({ status: "done" });
+      },
+      () => setLoc({ status: "error", message: "We couldn’t get your location. Type the address instead." }),
+      { enableHighAccuracy: true, timeout: 10000 },
+    );
+  }
+  return (
+    <div className="quick">
+      {locate && (
+        <button type="button" className="quick-btn quick-loc" onClick={useLocation} disabled={loc.status === "busy"}>
+          <span className="quick-dot" aria-hidden="true" />{loc.status === "busy" ? "Finding you…" : "Use my location"}
+        </button>
+      )}
+      {AIRPORTS.map((a) => (
+        <button key={a.value} type="button" className="quick-btn" onClick={() => onPick(a.value)}>{a.label}</button>
+      ))}
+      {loc.status === "error" && <p className="field-hint quick-msg">{loc.message}</p>}
+    </div>
+  );
+}
+
 export function ReserveForm({ initial }) {
   const formRef = useRef(null);
   const [f, setF] = useState(() => ({
@@ -111,7 +155,16 @@ export function ReserveForm({ initial }) {
   }));
   const [errors, setErrors] = useState({});
   const [state, setState] = useState({ status: "idle" });
+  const [rider, setRider] = useState(null);
   const set = (k) => (e) => setF((s) => ({ ...s, [k]: e?.target ? (e.target.type === "checkbox" ? e.target.checked : e.target.value) : e }));
+  const put = (k) => (v) => { setF((s) => ({ ...s, [k]: v })); setErrors((x) => ({ ...x, [k]: undefined })); };
+
+  // A returning rider's name, email and mobile, kept only in their own browser after a request.
+  useEffect(() => {
+    try { const r = JSON.parse(localStorage.getItem(RIDER_KEY) || "null"); if (r?.email) setRider(r); } catch {}
+  }, []);
+  const fillRider = () => { setF((s) => ({ ...s, name: rider.name || s.name, email: rider.email || s.email, phone: rider.phone || s.phone })); setErrors((x) => ({ ...x, name: undefined, email: undefined, phone: undefined })); };
+  const forgetRider = () => { try { localStorage.removeItem(RIDER_KEY); } catch {} setRider(null); };
 
   const payload = () => ({
     ...f,
@@ -134,7 +187,10 @@ export function ReserveForm({ initial }) {
     }
     setState({ status: "sending" });
     const res = await post("/api/reserve", body);
-    if (res.ok) return setState({ status: "sent", sent: body });
+    if (res.ok) {
+      try { localStorage.setItem(RIDER_KEY, JSON.stringify({ name: body.name, email: body.email, phone: body.phone })); } catch {}
+      return setState({ status: "sent", sent: body });
+    }
     setErrors(res.fields ?? {});
     setState({ status: "idle", message: res.error });
     if (res.fields) focusFirstError(formRef.current, res.fields);
@@ -171,6 +227,7 @@ export function ReserveForm({ initial }) {
         <div className="row-2">
           <Field id="pickup" label="Pickup" hint={airport ? "An address, or the airport (ORD or MDW)" : "Address or place"} error={errors.pickup}>
             <input {...wire("pickup", errors, true)} value={f.pickup} onChange={set("pickup")} autoComplete="street-address" />
+            <Quick onPick={put("pickup")} locate />
           </Field>
           {hourly ? (
             <Field id="hours" label="Hours, roughly" hint="Your quote states the minimum" error={errors.hours}>
@@ -179,6 +236,7 @@ export function ReserveForm({ initial }) {
           ) : (
             <Field id="dropoff" label="Drop-off" hint="Address, or the airport" error={errors.dropoff}>
               <input {...wire("dropoff", errors, true)} value={f.dropoff} onChange={set("dropoff")} />
+              <Quick onPick={put("dropoff")} />
             </Field>
           )}
         </div>
@@ -238,6 +296,14 @@ export function ReserveForm({ initial }) {
 
       <div className="form-part">
         <h2 className="form-title">You</h2>
+        {rider && (
+          <div className="autofill">
+            <button type="button" className="quick-btn autofill-btn" onClick={fillRider}>
+              <span className="quick-dot" aria-hidden="true" />Fill in my details
+            </button>
+            <span className="field-hint">{rider.name ? `${rider.name}, ` : ""}{rider.email}. Saved on this device only. <button type="button" className="link-btn" onClick={forgetRider}>Forget</button></span>
+          </div>
+        )}
         <Field id="name" label="Name" error={errors.name}>
           <input {...wire("name", errors)} value={f.name} onChange={set("name")} autoComplete="name" />
         </Field>
