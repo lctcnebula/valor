@@ -1,6 +1,8 @@
 "use client";
 
 import { useRef, useState } from "react";
+import { SITE } from "@/lib/content";
+import SendCar from "./SendCar";
 import {
   MAX_BAGS,
   MAX_HOURS,
@@ -26,6 +28,8 @@ async function post(path, body) {
   }
   const data = await res.json().catch(() => null);
   if (res.ok && data?.ok) return { ok: true };
+  // Email isn't set up on the server: the page opens the prepared message in the visitor's email app instead.
+  if (data?.code === "no-mail") return { ok: true, mailto: `mailto:${SITE.email}?subject=${encodeURIComponent(data.subject)}&body=${encodeURIComponent(data.text)}` };
   if (res.status === 429) return { error: "Too many attempts. Wait a minute and try again." };
   return { error: data?.error ?? fallback, fields: data?.fields ?? {} };
 }
@@ -162,6 +166,7 @@ export function ReserveForm({ initial }) {
 
   // One pill fills the whole form with a sample trip; the rider still ticks consent themselves.
   const [auto, setAuto] = useState(null);
+  const [ride, setRide] = useState(null);
   function autofill() {
     setF((s) => ({ ...s, ...sampleTrip(s.tripType) }));
     setErrors({});
@@ -189,8 +194,24 @@ export function ReserveForm({ initial }) {
       return;
     }
     setState({ status: "sending" });
+    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const started = Date.now();
+    if (!reduce) setRide("drive");
     const res = await post("/api/reserve", body);
-    if (res.ok) return setState({ status: "sent", sent: body });
+    if (res.ok) {
+      // Let the car arrive and idle a moment, then launch it off before the confirmation shows.
+      if (!reduce) {
+        await new Promise((r) => setTimeout(r, Math.max(0, 1500 - (Date.now() - started))));
+        setRide("leave");
+        await new Promise((r) => setTimeout(r, 1250));
+      }
+      setRide(null);
+      setState({ status: "sent", sent: body, mailto: res.mailto });
+      if (res.mailto) window.location.href = res.mailto;
+      window.scrollTo({ top: 0, behavior: reduce ? "auto" : "smooth" });
+      return;
+    }
+    setRide(null);
     setErrors(res.fields ?? {});
     setState({ status: "idle", message: res.error });
     if (res.fields) focusFirstError(formRef.current, res.fields);
@@ -200,10 +221,22 @@ export function ReserveForm({ initial }) {
     const s = state.sent;
     return (
       <div className="received" role="status">
-        <h2>Request received. Not yet confirmed.</h2>
-        <p className="lead">
-          We’ll check availability and email a written quote to {s.email}. Your ride is booked only when you accept it and we confirm.
-        </p>
+        {state.mailto ? (
+          <>
+            <h2>One more tap: send the email.</h2>
+            <p className="lead">
+              Your request is written out in your email app, addressed to {SITE.email}. Press send there and we’ll reply to {s.email} with a written quote.
+            </p>
+            <a className="btn btn-primary" href={state.mailto}>Open the email again</a>
+          </>
+        ) : (
+          <>
+            <h2>Request received. Not yet confirmed.</h2>
+            <p className="lead">
+              We’ll check availability and email a written quote to {s.email}. Your ride is booked only when you accept it and we confirm.
+            </p>
+          </>
+        )}
         <dl className="ticket">
           <div><dt>Trip</dt><dd>{labelOf(TRIP_TYPES, s.tripType)}</dd></div>
           <div><dt>Pickup</dt><dd>{s.pickup}</dd></div>
@@ -221,6 +254,7 @@ export function ReserveForm({ initial }) {
 
   return (
     <form ref={formRef} className="form" onSubmit={onSubmit} noValidate>
+      {ride && <SendCar phase={ride} label={ride === "leave" ? "On its way." : "Sending your request…"} />}
       <div className="autofill-bar">
         <button type="button" className="autofill-pill" onClick={autofill}>
           <span className="autofill-spark" aria-hidden="true" />Autofill
@@ -354,7 +388,11 @@ export function ContactForm() {
     }
     setState({ status: "sending" });
     const res = await post("/api/contact", f);
-    if (res.ok) return setState({ status: "sent" });
+    if (res.ok) {
+      setState({ status: "sent", mailto: res.mailto });
+      if (res.mailto) window.location.href = res.mailto;
+      return;
+    }
     setErrors(res.fields ?? {});
     setState({ status: "idle", message: res.error });
   }
@@ -362,8 +400,18 @@ export function ContactForm() {
   if (state.status === "sent") {
     return (
       <div className="received" role="status">
-        <h2>Message sent.</h2>
-        <p className="lead">We’ll reply to {f.email}.</p>
+        {state.mailto ? (
+          <>
+            <h2>One more tap: send the email.</h2>
+            <p className="lead">Your message is written out in your email app, addressed to {SITE.email}. Press send there and we’ll reply to {f.email}.</p>
+            <a className="btn btn-primary" href={state.mailto}>Open the email again</a>
+          </>
+        ) : (
+          <>
+            <h2>Message sent.</h2>
+            <p className="lead">We’ll reply to {f.email}.</p>
+          </>
+        )}
       </div>
     );
   }

@@ -1,5 +1,5 @@
 import { TRIP_TYPES, VEHICLES, labelOf, validateReservation, whenText } from "@/lib/forms";
-import { clientIp, deliver, inbox, rateLimited } from "@/lib/mailer";
+import { clientIp, deliver, inbox, notConfigured, rateLimited } from "@/lib/mailer";
 import { SITE } from "@/lib/content";
 
 export async function POST(request) {
@@ -59,6 +59,11 @@ export async function POST(request) {
     );
     return Response.json({ ok: true, id: sent.id ?? "sent" });
   } catch (err) {
+    // Email isn't set up on this deployment: hand the prepared message back so the page can open it
+    // in the visitor's own email app, addressed to Valor. Nothing is lost and nothing is claimed as sent.
+    if (notConfigured(err)) {
+      return Response.json({ ok: false, code: "no-mail", subject: `Reservation request — ${trip}, ${whenText(input.date, input.time)} — ${input.name}`, text: team }, { status: 503 });
+    }
     console.error("[forms] reservation delivery failed", err);
     return Response.json({ ok: false, error: "We couldn’t send that right now. Please try again in a few minutes." }, { status: 503 });
   }
