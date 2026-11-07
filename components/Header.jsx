@@ -3,8 +3,11 @@
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { NAV, RESERVE_HREF, SERVICE_NAV, SITE } from "@/lib/content";
+import { MAIN_SERVICES, NAV, RESERVE_HREF, SERVICE_NAV, SITE } from "@/lib/content";
 import Logo from "./Logo";
+
+const MAIN = SERVICE_NAV.filter((s) => MAIN_SERVICES.includes(s.href));
+const MORE = SERVICE_NAV.filter((s) => !MAIN_SERVICES.includes(s.href));
 
 export default function Header() {
   const pathname = usePathname();
@@ -22,7 +25,7 @@ export default function Header() {
   }, []);
 
   const current = (href) => (pathname === href ? "page" : undefined);
-  const inServices = SERVICE_NAV.some((s) => s.href === pathname);
+  const inServices = MORE.some((s) => s.href === pathname);
 
   return (
     <header className="header">
@@ -31,6 +34,9 @@ export default function Header() {
           <Logo layout="header" id="vl-head" title="" className="header-logo" />
         </Link>
         <nav className="header-nav" aria-label="Primary">
+          {MAIN.map((n) => (
+            <Link key={n.href} href={n.href} aria-current={current(n.href)}>{n.label}</Link>
+          ))}
           <div className={`nav-drop ${services ? "is-open" : ""}`} ref={drop}>
             <button
               type="button"
@@ -39,10 +45,10 @@ export default function Header() {
               aria-controls="services-menu"
               onClick={() => setServices((o) => !o)}
             >
-              Services <span className="nav-caret" aria-hidden="true" />
+              More services <span className="nav-caret" aria-hidden="true" />
             </button>
             <div id="services-menu" className="nav-drop-menu">
-              {SERVICE_NAV.map((n) => (
+              {MORE.map((n) => (
                 <Link key={n.href} href={n.href} aria-current={current(n.href)}>
                   <span className="nav-drop-label">{n.label}</span>
                   <span className="nav-drop-note">{n.note}</span>
@@ -70,8 +76,11 @@ export default function Header() {
       </div>
       <nav id="mobile-menu" className="mobile-menu" aria-label="Mobile" hidden={!open}>
         <div className="container">
-          <p className="mobile-group">Services</p>
-          {SERVICE_NAV.map((n) => (
+          {MAIN.map((n) => (
+            <Link key={n.href} href={n.href} aria-current={current(n.href)}>{n.label}</Link>
+          ))}
+          <p className="mobile-group">More services</p>
+          {MORE.map((n) => (
             <Link key={n.href} href={n.href} aria-current={current(n.href)}>{n.label}</Link>
           ))}
           <p className="mobile-group">Valor Limo</p>

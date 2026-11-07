@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import {
   MAX_BAGS,
   MAX_HOURS,
@@ -88,28 +88,6 @@ const AIRPORTS = [
   { label: "O’Hare (ORD)", value: "O’Hare International Airport (ORD)" },
   { label: "Midway (MDW)", value: "Midway International Airport (MDW)" },
 ];
-const RIDER_KEY = "valor:rider";
-
-/** The rider's current street address, from the browser's location and OpenStreetMap's reverse geocoder. */
-function locateAddress() {
-  return new Promise((resolve, reject) => {
-    if (!navigator.geolocation) return reject(new Error("no geolocation"));
-    navigator.geolocation.getCurrentPosition(
-      async ({ coords }) => {
-        const near = `Near ${coords.latitude.toFixed(5)}, ${coords.longitude.toFixed(5)}`;
-        try {
-          const r = await fetch(`https://nominatim.openstreetmap.org/reverse?format=jsonv2&zoom=18&addressdetails=1&lat=${coords.latitude}&lon=${coords.longitude}`, { headers: { "Accept-Language": "en" } });
-          const a = (await r.json())?.address ?? {};
-          const street = [a.house_number, a.road].filter(Boolean).join(" ");
-          const town = a.city || a.town || a.village || a.suburb || "";
-          resolve([street, town, a.state].filter(Boolean).join(", ") || near);
-        } catch { resolve(near); }
-      },
-      reject,
-      { enableHighAccuracy: true, timeout: 10000 },
-    );
-  });
-}
 
 /** One-tap airport fills under an address field. */
 function Quick({ onPick }) {
@@ -122,9 +100,35 @@ function Quick({ onPick }) {
   );
 }
 
-const FILL_ORDER = ["pickup", "dropoff", "date", "time", "name", "email", "phone"];
-const NAMES = { pickup: "pickup", name: "name", email: "email", phone: "mobile" };
-const list = (xs) => (xs.length < 2 ? xs.join("") : `${xs.slice(0, -1).join(", ")} and ${xs[xs.length - 1]}`);
+/** A sample trip, so the form can be tried in one click. Dates are tomorrow, Chicago time. */
+function sampleTrip(tripType) {
+  const d = new Date(`${todayInChicago()}T12:00:00`);
+  d.setDate(d.getDate() + 1);
+  const tomorrow = d.toISOString().slice(0, 10);
+  d.setDate(d.getDate() + 3);
+  const back = d.toISOString().slice(0, 10);
+  const airport = tripType === "airport", hourly = tripType === "hourly";
+  return {
+    pickup: "875 N Michigan Ave, Chicago, IL 60611",
+    dropoff: airport ? "O’Hare International Airport (ORD)" : hourly ? "Dinner in the West Loop, then the theatre" : "1 N Wacker Dr, Chicago, IL 60606",
+    hours: "4",
+    date: tomorrow,
+    time: "09:30",
+    passengers: "2",
+    bags: airport ? "2" : "0",
+    vehicle: "sedan",
+    flight: airport ? "UA 1234" : "",
+    nameSign: airport,
+    returnTrip: airport,
+    returnDate: airport ? back : "",
+    returnTime: airport ? "18:45" : "",
+    returnPickup: airport ? "O’Hare, arriving on UA 2345" : "",
+    name: "Jordan Lee",
+    email: "jordan.lee@example.com",
+    phone: "(312) 555-0142",
+    notes: "Sample request: one child seat, please.",
+  };
+}
 
 export function ReserveForm({ initial }) {
   const formRef = useRef(null);
@@ -153,31 +157,16 @@ export function ReserveForm({ initial }) {
   }));
   const [errors, setErrors] = useState({});
   const [state, setState] = useState({ status: "idle" });
-  const [rider, setRider] = useState(null);
   const set = (k) => (e) => setF((s) => ({ ...s, [k]: e?.target ? (e.target.type === "checkbox" ? e.target.checked : e.target.value) : e }));
   const put = (k) => (v) => { setF((s) => ({ ...s, [k]: v })); setErrors((x) => ({ ...x, [k]: undefined })); };
 
-  // A returning rider's name, email and mobile, kept only in their own browser after a request.
-  useEffect(() => {
-    try { const r = JSON.parse(localStorage.getItem(RIDER_KEY) || "null"); if (r?.email) setRider(r); } catch {}
-  }, []);
-  const forgetRider = () => { try { localStorage.removeItem(RIDER_KEY); } catch {} setRider(null); };
-
-  // One pill fills what we can: pickup from the rider's location, and their saved name, email and mobile.
-  const [auto, setAuto] = useState({ status: "idle" });
-  async function autofill() {
-    setAuto({ status: "busy" });
-    const add = {};
-    if (rider) for (const k of ["name", "email", "phone"]) if (rider[k] && !f[k]) add[k] = rider[k];
-    if (!f.pickup.trim()) { try { add.pickup = await locateAddress(); } catch {} }
-    setF((s) => ({ ...s, ...add }));
-    setErrors((x) => { const y = { ...x }; for (const k of Object.keys(add)) delete y[k]; return y; });
-    const filled = ["pickup", "name", "email", "phone"].filter((k) => k in add).map((k) => NAMES[k]);
-    setAuto({ status: "done", message: filled.length ? `Filled ${list(filled)}.` : "Nothing more to fill. Add the rest below." });
-    setTimeout(() => {
-      const next = FILL_ORDER.map((id) => formRef.current?.querySelector(`#${id}`)).find((el) => el && !el.value);
-      next?.focus();
-    }, 50);
+  // One pill fills the whole form with a sample trip; the rider still ticks consent themselves.
+  const [auto, setAuto] = useState(null);
+  function autofill() {
+    setF((s) => ({ ...s, ...sampleTrip(s.tripType) }));
+    setErrors({});
+    setAuto("Sample trip filled in. Change anything, tick the consent box and send.");
+    setTimeout(() => formRef.current?.querySelector('input[name="consent"]')?.focus(), 50);
   }
 
   const payload = () => ({
@@ -201,10 +190,7 @@ export function ReserveForm({ initial }) {
     }
     setState({ status: "sending" });
     const res = await post("/api/reserve", body);
-    if (res.ok) {
-      try { localStorage.setItem(RIDER_KEY, JSON.stringify({ name: body.name, email: body.email, phone: body.phone })); } catch {}
-      return setState({ status: "sent", sent: body });
-    }
+    if (res.ok) return setState({ status: "sent", sent: body });
     setErrors(res.fields ?? {});
     setState({ status: "idle", message: res.error });
     if (res.fields) focusFirstError(formRef.current, res.fields);
@@ -236,13 +222,10 @@ export function ReserveForm({ initial }) {
   return (
     <form ref={formRef} className="form" onSubmit={onSubmit} noValidate>
       <div className="autofill-bar">
-        <button type="button" className="autofill-pill" onClick={autofill} disabled={auto.status === "busy"}>
-          <span className="autofill-spark" aria-hidden="true" />{auto.status === "busy" ? "Filling…" : "Autofill"}
+        <button type="button" className="autofill-pill" onClick={autofill}>
+          <span className="autofill-spark" aria-hidden="true" />Autofill
         </button>
-        <span className="autofill-note" aria-live="polite">
-          {auto.message ?? (rider ? `Your location and saved details (${rider.email}).` : "Fills your pickup from your location.")}
-          {rider && <> <button type="button" className="link-btn" onClick={forgetRider}>Forget my details</button></>}
-        </span>
+        <span className="autofill-note" aria-live="polite">{auto ?? "Fill the form with a sample trip in one click."}</span>
       </div>
       <div className="form-part">
         <h2 className="form-title">The trip</h2>
