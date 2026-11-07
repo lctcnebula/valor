@@ -90,43 +90,41 @@ const AIRPORTS = [
 ];
 const RIDER_KEY = "valor:rider";
 
-/** One-tap fills under an address field: the airports, and optionally the rider's current location. */
-function Quick({ onPick, locate }) {
-  const [loc, setLoc] = useState({ status: "idle" });
-  async function useLocation() {
-    if (!navigator.geolocation) return setLoc({ status: "error", message: "Location isn’t available in this browser." });
-    setLoc({ status: "busy" });
+/** The rider's current street address, from the browser's location and OpenStreetMap's reverse geocoder. */
+function locateAddress() {
+  return new Promise((resolve, reject) => {
+    if (!navigator.geolocation) return reject(new Error("no geolocation"));
     navigator.geolocation.getCurrentPosition(
       async ({ coords }) => {
         const near = `Near ${coords.latitude.toFixed(5)}, ${coords.longitude.toFixed(5)}`;
         try {
-          // OpenStreetMap's reverse geocoder turns the position into a street address.
           const r = await fetch(`https://nominatim.openstreetmap.org/reverse?format=jsonv2&zoom=18&addressdetails=1&lat=${coords.latitude}&lon=${coords.longitude}`, { headers: { "Accept-Language": "en" } });
           const a = (await r.json())?.address ?? {};
           const street = [a.house_number, a.road].filter(Boolean).join(" ");
           const town = a.city || a.town || a.village || a.suburb || "";
-          onPick([street, town, a.state].filter(Boolean).join(", ") || near);
-        } catch { onPick(near); }
-        setLoc({ status: "done" });
+          resolve([street, town, a.state].filter(Boolean).join(", ") || near);
+        } catch { resolve(near); }
       },
-      () => setLoc({ status: "error", message: "We couldn’t get your location. Type the address instead." }),
+      reject,
       { enableHighAccuracy: true, timeout: 10000 },
     );
-  }
+  });
+}
+
+/** One-tap airport fills under an address field. */
+function Quick({ onPick }) {
   return (
     <div className="quick">
-      {locate && (
-        <button type="button" className="quick-btn quick-loc" onClick={useLocation} disabled={loc.status === "busy"}>
-          <span className="quick-dot" aria-hidden="true" />{loc.status === "busy" ? "Finding you…" : "Use my location"}
-        </button>
-      )}
       {AIRPORTS.map((a) => (
         <button key={a.value} type="button" className="quick-btn" onClick={() => onPick(a.value)}>{a.label}</button>
       ))}
-      {loc.status === "error" && <p className="field-hint quick-msg">{loc.message}</p>}
     </div>
   );
 }
+
+const FILL_ORDER = ["pickup", "dropoff", "date", "time", "name", "email", "phone"];
+const NAMES = { pickup: "pickup", name: "name", email: "email", phone: "mobile" };
+const list = (xs) => (xs.length < 2 ? xs.join("") : `${xs.slice(0, -1).join(", ")} and ${xs[xs.length - 1]}`);
 
 export function ReserveForm({ initial }) {
   const formRef = useRef(null);
@@ -163,8 +161,24 @@ export function ReserveForm({ initial }) {
   useEffect(() => {
     try { const r = JSON.parse(localStorage.getItem(RIDER_KEY) || "null"); if (r?.email) setRider(r); } catch {}
   }, []);
-  const fillRider = () => { setF((s) => ({ ...s, name: rider.name || s.name, email: rider.email || s.email, phone: rider.phone || s.phone })); setErrors((x) => ({ ...x, name: undefined, email: undefined, phone: undefined })); };
   const forgetRider = () => { try { localStorage.removeItem(RIDER_KEY); } catch {} setRider(null); };
+
+  // One pill fills what we can: pickup from the rider's location, and their saved name, email and mobile.
+  const [auto, setAuto] = useState({ status: "idle" });
+  async function autofill() {
+    setAuto({ status: "busy" });
+    const add = {};
+    if (rider) for (const k of ["name", "email", "phone"]) if (rider[k] && !f[k]) add[k] = rider[k];
+    if (!f.pickup.trim()) { try { add.pickup = await locateAddress(); } catch {} }
+    setF((s) => ({ ...s, ...add }));
+    setErrors((x) => { const y = { ...x }; for (const k of Object.keys(add)) delete y[k]; return y; });
+    const filled = ["pickup", "name", "email", "phone"].filter((k) => k in add).map((k) => NAMES[k]);
+    setAuto({ status: "done", message: filled.length ? `Filled ${list(filled)}.` : "Nothing more to fill. Add the rest below." });
+    setTimeout(() => {
+      const next = FILL_ORDER.map((id) => formRef.current?.querySelector(`#${id}`)).find((el) => el && !el.value);
+      next?.focus();
+    }, 50);
+  }
 
   const payload = () => ({
     ...f,
@@ -221,13 +235,22 @@ export function ReserveForm({ initial }) {
 
   return (
     <form ref={formRef} className="form" onSubmit={onSubmit} noValidate>
+      <div className="autofill-bar">
+        <button type="button" className="autofill-pill" onClick={autofill} disabled={auto.status === "busy"}>
+          <span className="autofill-spark" aria-hidden="true" />{auto.status === "busy" ? "Filling…" : "Autofill"}
+        </button>
+        <span className="autofill-note" aria-live="polite">
+          {auto.message ?? (rider ? `Your location and saved details (${rider.email}).` : "Fills your pickup from your location.")}
+          {rider && <> <button type="button" className="link-btn" onClick={forgetRider}>Forget my details</button></>}
+        </span>
+      </div>
       <div className="form-part">
         <h2 className="form-title">The trip</h2>
         <Cells name="tripType" legend="Kind of trip" options={TRIP_TYPES} value={f.tripType} onChange={set("tripType")} error={errors.tripType} />
         <div className="row-2">
           <Field id="pickup" label="Pickup" hint={airport ? "An address, or the airport (ORD or MDW)" : "Address or place"} error={errors.pickup}>
             <input {...wire("pickup", errors, true)} value={f.pickup} onChange={set("pickup")} autoComplete="street-address" />
-            <Quick onPick={put("pickup")} locate />
+            <Quick onPick={put("pickup")} />
           </Field>
           {hourly ? (
             <Field id="hours" label="Hours, roughly" hint="Your quote states the minimum" error={errors.hours}>
@@ -296,14 +319,6 @@ export function ReserveForm({ initial }) {
 
       <div className="form-part">
         <h2 className="form-title">You</h2>
-        {rider && (
-          <div className="autofill">
-            <button type="button" className="quick-btn autofill-btn" onClick={fillRider}>
-              <span className="quick-dot" aria-hidden="true" />Fill in my details
-            </button>
-            <span className="field-hint">{rider.name ? `${rider.name}, ` : ""}{rider.email}. Saved on this device only. <button type="button" className="link-btn" onClick={forgetRider}>Forget</button></span>
-          </div>
-        )}
         <Field id="name" label="Name" error={errors.name}>
           <input {...wire("name", errors)} value={f.name} onChange={set("name")} autoComplete="name" />
         </Field>

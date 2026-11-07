@@ -31,8 +31,8 @@ export default function Privacy() {
         {
           h: "Autofill on the reservation form",
           p: [
-            "“Use my location” asks your browser for your position only when you press it, and sends it to OpenStreetMap’s address lookup (Nominatim) to fill in the pickup address. We do not keep your location.",
-            "After you send a request, your name, email and mobile are saved in your own browser so “Fill in my details” can fill them next time. They stay on your device; press “Forget” on the form to remove them.",
+            "The “Autofill” button asks your browser for your position only when you press it, and sends it to OpenStreetMap’s address lookup (Nominatim) to fill in the pickup address. We do not keep your location.",
+            "After you send a request, your name, email and mobile are saved in your own browser so “Autofill” can fill them next time. They stay on your device; press “Forget my details” on the form to remove them.",
           ],
         },
         {
