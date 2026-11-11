@@ -9,7 +9,7 @@ import { VALOR_SPACED } from "@/lib/logo-paths.mjs";
  * wheels spinning and headlights on, and idles while the request travels. phase "leave": it launches off to the
  * right, stretching into a light trail, and the overlay fades to the confirmation.
  */
-const IN = { s: 1.2, cx: 484, base: 291 };
+const IN = { s: 1, cx: 484, base: 266 };
 const STREAKS = Array.from({ length: 14 }, (_, i) => ({ top: 18 + ((i * 37) % 64), w: 12 + ((i * 23) % 26), d: (i * 0.13) % 0.9, o: 0.12 + ((i * 7) % 5) / 20 }));
 
 export default function SendCar({ phase, label }) {

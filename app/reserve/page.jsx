@@ -23,7 +23,7 @@ export default async function Reserve({ searchParams }) {
           <p className="well-head">What happens next</p>
           <ol>
             {STEPS.map((s) => (
-              <li key={s.n}><span className="step-n">{s.n}</span><span>{s.title}</span></li>
+              <li key={s.n}><span>{s.title}</span></li>
             ))}
           </ol>
         </aside>

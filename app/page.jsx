@@ -38,11 +38,11 @@ export default function Home() {
           </form>
         </div>
         <div className="container">
-          <ol className="hero-steps" aria-label="How it works">
-          <li><span>01</span>Send the trip</li>
-          <li><span>02</span>Get one written total</li>
-          <li><span>03</span>Accept, and it’s booked</li>
-          </ol>
+          <ul className="hero-steps" aria-label="How it works">
+          <li>Send the trip</li>
+          <li>Get one written total</li>
+          <li>Accept, and it’s booked</li>
+          </ul>
         </div>
       </section>
 

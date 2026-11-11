@@ -7,7 +7,7 @@ export default function Footer() {
     <footer className="footer">
       <div className="container footer-top">
         <div className="footer-brand">
-          <Logo layout="car" id="vl-foot" className="footer-logo" title="Valor Limo" />
+          <Logo layout="header" id="vl-foot" className="footer-logo" title="Valor Limo" />
           <p>Chauffeured black car service across {SITE.areaLong}. Every trip quoted in writing before it is booked.</p>
         </div>
         <nav className="footer-links" aria-label="Services">

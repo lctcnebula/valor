@@ -54,9 +54,8 @@ export default function About() {
         <div className="container">
           <h2 className="rule-head">What you can count on</h2>
           <ul className="promises">
-            {PROMISES.map((p, i) => (
+            {PROMISES.map((p) => (
               <li key={p.title}>
-                <span className="promise-n">0{i + 1}</span>
                 <h3>{p.title}</h3>
                 <p>{p.body}</p>
               </li>
@@ -71,7 +70,6 @@ export default function About() {
           <ol className="about-steps">
             {STEPS.map((s) => (
               <li key={s.n}>
-                <span className="promise-n">0{s.n}</span>
                 <h3>{s.title}</h3>
                 <p>{s.body}</p>
               </li>
