@@ -82,3 +82,5 @@ Stack: Next.js 16 (App Router), React 19, plain CSS.
 Until `RESEND_API_KEY` and `RESERVATIONS_TO` are set on Vercel, the APIs answer `code: "no-mail"` with the prepared
 message, and the page opens it in the visitor's own email app addressed to the site email, so no request is lost.
 Sending a reservation plays the car animation (`components/SendCar.jsx`) either way.
+
+# valor
